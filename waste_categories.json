@@ -309,7 +309,7 @@
     "colour": "#56CCF2",
     "default": false,
     "description": "Uncontaminated glass: rinsed empty bottles, clean broken glassware, clean slides, coverslips and Pasteur pipettes.",
-    "instructions": "Use a dustpan or tongs, never bare hands. Contaminated glass must be decontaminated first.",
+    "instructions": "Empty bottles: triple-rinse (rinse goes to the right liquid waste), remove the cap and deface the label. Broken glass: use a dustpan or tongs, never bare hands. Contaminated glass goes in sharps instead.",
     "taxonomy": [
       "GLS"
     ]

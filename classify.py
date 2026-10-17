@@ -169,9 +169,9 @@ class WasteResult(BaseModel):
     item_description: str = Field(description="Short description of what is in the photo")
     hazards: list[str] = Field(description="Main hazards, e.g. 'flammable', 'sharp', 'biohazard'")
     ppe: list[str] = Field(description="PPE needed to handle it, e.g. 'nitrile gloves', 'goggles'")
-    reasoning: str = Field(description="One or two sentences on what you recognised and why")
+    reasoning: str = Field(description="One or two sentences on what you recognised (material, contents, contamination). Do not name a bin")
     missing_bin: str = Field(description="If category_id is 'none', the type of bin this waste needs; otherwise an empty string")
-    caution: str = Field(description="A short extra safety warning only for unusual or high-risk items; otherwise an empty string")
+    caution: str = Field(description="A short extra safety warning only for unusual or high-risk items, without naming a bin; otherwise an empty string")
     cleaning: Cleaning
 
 
@@ -213,6 +213,7 @@ Lab's bins:
 - When torn between two suitable bins, pick the more cautious one.
 
 Also:
+- In reasoning and caution, describe what the item is and its hazards. Do NOT name a bin or say where it goes: the app decides the bin from the lab's policy, and your text must never contradict it.
 - Be honest about confidence. Use a low value if the photo is unclear.
 - Only fill in caution for genuinely unusual or high-risk items.
 - Cleaning: if the photo shows reusable equipment (glassware, spatulas, stirrer bars, reusable plasticware), set cleaning.relevant to true and give 3 to 6 short ordered steps, naming which of the lab's bins any rinse goes into. Otherwise cleaning.relevant is false with empty steps.
