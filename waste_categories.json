@@ -1,0 +1,482 @@
+[
+  {
+    "id": "hydrocarbon",
+    "name": "Hydrocarbon (non-halogenated) solvents",
+    "group": "Solvents",
+    "shape": "carboy",
+    "label": "HC",
+    "bin": "Hydrocarbon waste container",
+    "colour": "#BB6BD9",
+    "default": true,
+    "description": "Organic solvents with no halogens, e.g. hexane, petroleum ether, toluene, xylene, ethanol, methanol, isopropanol, acetone, acetonitrile, ethyl acetate, DMSO.",
+    "instructions": "Pour in the fume hood using a funnel. Never mix with oxidisers or halogenated waste. Cap the container afterwards.",
+    "taxonomy": [
+      "CHEM-NH"
+    ]
+  },
+  {
+    "id": "chlorinated",
+    "name": "Chlorinated solvents",
+    "group": "Solvents",
+    "shape": "carboy",
+    "label": "Cl",
+    "bin": "Chlorinated waste container",
+    "colour": "#27AE9F",
+    "default": true,
+    "description": "Solvents containing chlorine, e.g. dichloromethane (DCM), chloroform, carbon tetrachloride, chlorobenzene.",
+    "instructions": "Pour in the fume hood using a funnel. Keep separate from hydrocarbon waste and log the volume.",
+    "taxonomy": [
+      "CHEM-HAL"
+    ]
+  },
+  {
+    "id": "halogenated",
+    "name": "Halogenated solvents",
+    "group": "Solvents",
+    "shape": "carboy",
+    "label": "X",
+    "bin": "Halogenated waste container",
+    "colour": "#9B51E0",
+    "default": true,
+    "description": "Solvents containing bromine, fluorine or iodine (and chlorine if the lab has no separate chlorinated container), e.g. bromoform, iodomethane, fluorinated solvents.",
+    "instructions": "Pour in the fume hood using a funnel. Keep separate from hydrocarbon waste and log the volume.",
+    "taxonomy": [
+      "CHEM-HAL"
+    ]
+  },
+  {
+    "id": "aqueous",
+    "name": "Aqueous waste",
+    "group": "Aqueous & metals",
+    "shape": "carboy",
+    "label": "AQ",
+    "bin": "Aqueous waste container",
+    "colour": "#2F80ED",
+    "default": true,
+    "description": "Water-based solutions containing acids, bases, salts or dissolved non-heavy-metal chemicals.",
+    "instructions": "Check the pH and neutralise if your lab requires it. Never pour down the sink unless explicitly permitted.",
+    "taxonomy": [
+      "CHEM-AQ"
+    ]
+  },
+  {
+    "id": "acid",
+    "name": "Acid waste",
+    "group": "Aqueous & metals",
+    "shape": "carboy",
+    "label": "ACID",
+    "bin": "Acid-compatible labelled carboy",
+    "colour": "#EC7063",
+    "default": false,
+    "taxonomy": [
+      "CHEM-ACID"
+    ],
+    "description": "Strong or concentrated acids: HCl, H2SO4, HNO3, neat TFA or formic acid.",
+    "instructions": "Keep apart from bases, bleach, azide, cyanides and organics. Do not neutralise unless your SOP permits."
+  },
+  {
+    "id": "alkaline",
+    "name": "Alkaline waste",
+    "group": "Aqueous & metals",
+    "shape": "carboy",
+    "label": "BASE",
+    "bin": "Base-compatible labelled carboy",
+    "colour": "#F1948A",
+    "default": false,
+    "taxonomy": [
+      "CHEM-BASE"
+    ],
+    "description": "Strong bases such as NaOH or KOH solutions, roughly pH 11 and above.",
+    "instructions": "Keep apart from acids and aluminium. Do not neutralise unless your SOP permits."
+  },
+  {
+    "id": "drain",
+    "name": "Sink (drain with flush)",
+    "group": "Aqueous & metals",
+    "shape": "carboy",
+    "label": "SINK",
+    "bin": "Sink, flushed with plenty of water",
+    "colour": "#7FB3D5",
+    "default": false,
+    "taxonomy": [
+      "DRAIN"
+    ],
+    "description": "Small volumes of non-hazardous aqueous waste: neutral buffers (TBST, TAE without stain, running buffer), diluted used bleach.",
+    "instructions": "Flush with plenty of water. Only if your lab permits drain disposal."
+  },
+  {
+    "id": "silver_nitrate",
+    "name": "Silver nitrate waste",
+    "group": "Aqueous & metals",
+    "shape": "carboy",
+    "label": "AgNO₃",
+    "bin": "Silver nitrate waste container",
+    "colour": "#8C9AA8",
+    "default": true,
+    "description": "Silver nitrate solutions and silver residues, e.g. from halide tests or Tollens' reagent (Tollens' must be destroyed with dilute acid first, never stored).",
+    "instructions": "Collect separately so the silver can be recovered. Wear gloves: it stains skin. Never store ammoniacal silver solutions.",
+    "taxonomy": [
+      "METAL"
+    ]
+  },
+  {
+    "id": "heavy_metal",
+    "name": "Heavy metal waste",
+    "group": "Specialist",
+    "shape": "carboy",
+    "label": "Pb/Hg",
+    "bin": "Heavy metal waste container",
+    "colour": "#5D6D7E",
+    "default": true,
+    "description": "Solutions or solids containing heavy metals such as lead, mercury, cadmium, chromium, copper, nickel or cobalt.",
+    "instructions": "Collect separately and label with the metals present. Mercury spills: stop and call a technician.",
+    "taxonomy": [
+      "METAL"
+    ]
+  },
+  {
+    "id": "silica",
+    "name": "Silica waste",
+    "group": "Specialist",
+    "shape": "bin",
+    "label": "SiO₂",
+    "bin": "Silica waste bin",
+    "colour": "#D4A373",
+    "default": true,
+    "description": "Used silica gel from columns, TLC plates and silica-contaminated cotton wool or sand.",
+    "instructions": "Let solvent evaporate in the fume hood first. Bag dry silica and avoid creating dust; wear a mask if needed.",
+    "taxonomy": []
+  },
+  {
+    "id": "guanidinium",
+    "name": "Guanidinium / phenol lysis waste",
+    "group": "Specialist",
+    "shape": "carboy",
+    "label": "GUA",
+    "bin": "Dedicated labelled carboy (never shared with bleach waste)",
+    "colour": "#AF601A",
+    "default": false,
+    "taxonomy": [
+      "CHEM-GUA"
+    ],
+    "description": "TRIzol aqueous phase, kit lysis and binding buffers containing guanidinium.",
+    "instructions": "Never add bleach: toxic gas. Keep in its own labelled carboy."
+  },
+  {
+    "id": "cmr_liquid",
+    "name": "CMR liquids",
+    "group": "Specialist",
+    "shape": "carboy",
+    "label": "CMR",
+    "bin": "Sealed labelled bottle in secondary containment",
+    "colour": "#C0392B",
+    "default": false,
+    "taxonomy": [
+      "CMR-LIQ"
+    ],
+    "description": "Carcinogenic, mutagenic or reprotoxic liquids: acrylamide solution, EtBr buffers, formaldehyde/PFA, DAB, trypan blue.",
+    "instructions": "Seal, label every constituent, keep in secondary containment. Never down the drain."
+  },
+  {
+    "id": "cmr_solid",
+    "name": "CMR solids",
+    "group": "Specialist",
+    "shape": "bin",
+    "label": "CMR",
+    "bin": "Sealed labelled bin / double bag",
+    "colour": "#E74C3C",
+    "default": false,
+    "taxonomy": [
+      "CMR-SOL"
+    ],
+    "description": "Solids contaminated with CMR agents: EtBr gels, EtBr/DAB gloves and tips, trypan blue slides.",
+    "instructions": "Double bag, seal and label. Never autoclave."
+  },
+  {
+    "id": "reactive",
+    "name": "Reactive / unstable chemicals",
+    "group": "Specialist",
+    "shape": "carboy",
+    "label": "REACT",
+    "bin": "Own labelled container",
+    "colour": "#FF5733",
+    "default": false,
+    "taxonomy": [
+      "REACT"
+    ],
+    "description": "Water-reactive, peroxide-forming, explosive or azide solids: acetic anhydride, old ether/THF, picric acid, sodium azide.",
+    "instructions": "Never mix with anything. Old peroxide formers and dry picric acid must not be moved: report them to the lab safety officer."
+  },
+  {
+    "id": "cytotoxic",
+    "name": "Cytotoxic waste",
+    "group": "Specialist",
+    "shape": "bin",
+    "label": "CYTO",
+    "bin": "Purple-lidded bin / purple bag (and purple-lidded sharps)",
+    "colour": "#6C3483",
+    "default": false,
+    "taxonomy": [
+      "CYT",
+      "SHP-CYT"
+    ],
+    "description": "Waste and sharps exposed to cytotoxic or cytostatic drugs.",
+    "instructions": "Keep in its own purple stream. Never autoclave or drain."
+  },
+  {
+    "id": "autoclave",
+    "name": "Autoclave (biological) waste",
+    "group": "Solids & biological",
+    "shape": "bag",
+    "label": "BIO",
+    "bin": "Orange autoclave bag",
+    "colour": "#F2994A",
+    "default": true,
+    "description": "Microbial cultures, petri dishes, agar plates, plastic loops, tips and gloves contaminated with biological material.",
+    "instructions": "Place in the autoclave bag. Liquid cultures must be disinfected or autoclaved first. Never add chemicals or sharps.",
+    "taxonomy": [
+      "BIO-AUT"
+    ]
+  },
+  {
+    "id": "bio_liquid",
+    "name": "Biological liquids",
+    "group": "Solids & biological",
+    "shape": "carboy",
+    "label": "BIO-L",
+    "bin": "Aspirator flask containing disinfectant",
+    "colour": "#48C9B0",
+    "default": false,
+    "taxonomy": [
+      "BIO-LIQ"
+    ],
+    "description": "Aspirated media, supernatants and PBS/trypsin washes with biological material and no hazardous additives.",
+    "instructions": "Inactivate with disinfectant per your SOP, then drain; never autoclave once bleach is added."
+  },
+  {
+    "id": "gm_waste",
+    "name": "GM waste",
+    "group": "Solids & biological",
+    "shape": "bag",
+    "label": "GM",
+    "bin": "Labelled GM autoclave bag",
+    "colour": "#D68910",
+    "default": false,
+    "taxonomy": [
+      "BIO-GM"
+    ],
+    "description": "Transfected or virally transduced cells and GM-contaminated consumables and liquids.",
+    "instructions": "Inactivate before it leaves the lab and label as GM, per your GM risk assessment."
+  },
+  {
+    "id": "clinical",
+    "name": "Clinical waste (incineration)",
+    "group": "Solids & biological",
+    "shape": "bin",
+    "label": "CLIN",
+    "bin": "Yellow clinical waste bin / bag",
+    "colour": "#F4D03F",
+    "default": false,
+    "taxonomy": [
+      "BIO-INC"
+    ],
+    "description": "Human or animal tissue, FFPE blocks, unfixed samples.",
+    "instructions": "Seal, label and hold for clinical waste collection."
+  },
+  {
+    "id": "sharps",
+    "name": "Sharps",
+    "group": "Solids & biological",
+    "shape": "box",
+    "label": "SHARPS",
+    "bin": "Yellow sharps bin",
+    "colour": "#F2C94C",
+    "default": true,
+    "description": "Needles, syringes with needles, scalpel and razor blades, glass Pasteur pipettes, microscope slides and cover slips.",
+    "instructions": "Do not recap needles. Drop straight into the sharps bin and never fill past the line.",
+    "taxonomy": [
+      "SHP-INF",
+      "SHP-CHEM"
+    ]
+  },
+  {
+    "id": "broken_glass",
+    "name": "Clean glass",
+    "group": "Solids & biological",
+    "shape": "box",
+    "label": "GLASS",
+    "bin": "Glass disposal box",
+    "colour": "#56CCF2",
+    "default": false,
+    "description": "Uncontaminated glass: rinsed empty bottles, clean broken glassware, clean slides, coverslips and Pasteur pipettes.",
+    "instructions": "Use a dustpan or tongs, never bare hands. Contaminated glass must be decontaminated first.",
+    "taxonomy": [
+      "GLS"
+    ]
+  },
+  {
+    "id": "contaminated_solids",
+    "name": "Chemically contaminated solids",
+    "group": "Solids & biological",
+    "shape": "bin",
+    "label": "SOLID",
+    "bin": "Solid chemical waste bin",
+    "colour": "#EB5757",
+    "default": false,
+    "description": "Gloves, paper towels, weighing boats and filter paper with chemical residue.",
+    "instructions": "Bag and seal. Do not put in general waste.",
+    "taxonomy": [
+      "CHEM-SOL"
+    ]
+  },
+  {
+    "id": "recycling",
+    "name": "Recycling",
+    "group": "General",
+    "shape": "bin",
+    "label": "♻",
+    "bin": "Recycling bin",
+    "colour": "#27AE60",
+    "default": true,
+    "description": "Clean cardboard packaging, paper and uncontaminated plastic bottles.",
+    "instructions": "Flatten boxes. Only recycle containers that held non-hazardous contents.",
+    "taxonomy": [
+      "REC"
+    ]
+  },
+  {
+    "id": "general",
+    "name": "General waste",
+    "group": "General",
+    "shape": "bin",
+    "label": "GEN",
+    "bin": "Black general waste bin",
+    "colour": "#4F4F4F",
+    "default": false,
+    "description": "Clean, uncontaminated non-recyclable items such as food wrappers and clean tissues.",
+    "instructions": "Only if it has never touched chemicals or biological material.",
+    "taxonomy": [
+      "GEN"
+    ]
+  },
+  {
+    "id": "pharmaceutical",
+    "name": "Pharmaceutical waste",
+    "group": "Other collections",
+    "shape": "bin",
+    "label": "PHARM",
+    "bin": "Pharmaceutical waste bin (blue lid)",
+    "colour": "#3498DB",
+    "default": false,
+    "taxonomy": [
+      "PHARM"
+    ],
+    "description": "Expired or unused non-cytotoxic medicines.",
+    "instructions": "Keep in original packaging where possible."
+  },
+  {
+    "id": "lab_pack",
+    "name": "Surplus reagents (lab pack)",
+    "group": "Other collections",
+    "shape": "box",
+    "label": "PACK",
+    "bin": "Original container, listed on the lab-pack inventory",
+    "colour": "#A04000",
+    "default": false,
+    "taxonomy": [
+      "LABPACK"
+    ],
+    "description": "Surplus or unwanted reagents still in their original containers.",
+    "instructions": "Keep the original label and add it to the lab-pack inventory."
+  },
+  {
+    "id": "reuse",
+    "name": "Reuse / redistribute",
+    "group": "Other collections",
+    "shape": "box",
+    "label": "REUSE",
+    "bin": "Chemical exchange shelf",
+    "colour": "#58D68D",
+    "default": false,
+    "taxonomy": [
+      "REUSE"
+    ],
+    "description": "Unopened, in-date surplus reagents and consumables.",
+    "instructions": "Offer on the chemical exchange shelf before disposing."
+  },
+  {
+    "id": "takeback",
+    "name": "Supplier take-back",
+    "group": "Other collections",
+    "shape": "box",
+    "label": "BACK",
+    "bin": "Collection point / return to supplier",
+    "colour": "#82E0AA",
+    "default": false,
+    "taxonomy": [
+      "TAKEBACK"
+    ],
+    "description": "Polystyrene boxes, clean cool packs and supplier packaging.",
+    "instructions": "Return through the supplier take-back scheme."
+  },
+  {
+    "id": "weee",
+    "name": "Electrical equipment (WEEE)",
+    "group": "Other collections",
+    "shape": "box",
+    "label": "WEEE",
+    "bin": "Tagged WEEE collection",
+    "colour": "#566573",
+    "default": false,
+    "taxonomy": [
+      "WEEE"
+    ],
+    "description": "Old electronic equipment such as plate readers and power supplies.",
+    "instructions": "Decontaminate and tag before collection."
+  },
+  {
+    "id": "batteries",
+    "name": "Batteries",
+    "group": "Other collections",
+    "shape": "box",
+    "label": "BATT",
+    "bin": "Battery collection tub",
+    "colour": "#F5B041",
+    "default": false,
+    "taxonomy": [
+      "BATT"
+    ],
+    "description": "Instrument and pipette-controller batteries.",
+    "instructions": "Tape the terminals of lithium batteries."
+  },
+  {
+    "id": "lamps",
+    "name": "Lamps and UV tubes",
+    "group": "Other collections",
+    "shape": "box",
+    "label": "LAMP",
+    "bin": "Lamp collection box",
+    "colour": "#D4AC0D",
+    "default": false,
+    "taxonomy": [
+      "LAMP"
+    ],
+    "description": "UV bulbs, fluorescent tubes, transilluminator lamps.",
+    "instructions": "Keep intact; they contain mercury."
+  },
+  {
+    "id": "gas_cylinders",
+    "name": "Gas cylinders",
+    "group": "Other collections",
+    "shape": "box",
+    "label": "GAS",
+    "bin": "Return to supplier / cylinder store",
+    "colour": "#5499C7",
+    "default": false,
+    "taxonomy": [
+      "CYL"
+    ],
+    "description": "Empty or unwanted gas cylinders.",
+    "instructions": "Never put in any bin. Return to the supplier or cylinder store."
+  }
+]

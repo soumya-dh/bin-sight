@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bin-Sight</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #ffffff; --text: #1d2330; --muted: #667085;
+    --accent: #1f6feb; --accent-soft: #e8f0fe; --border: #e4e7ec; --radius: 16px;
+    --ok: #1a7f37; --err: #c0392b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f1217; --card: #181c24; --text: #e8eaee; --muted: #98a2b3;
+            --border: #2a303b; --accent-soft: #1b2a44; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+         background: var(--bg); color: var(--text); }
+  main { max-width: 640px; margin: 0 auto; padding: 20px 16px 120px; }
+  header h1 { margin: 0; font-size: 26px; }
+  header p { color: var(--muted); margin: 4px 0 18px; }
+
+  /* Stepper */
+  .stepper { display: flex; gap: 6px; margin-bottom: 18px; }
+  .stepper div { flex: 1; text-align: center; font-size: 12px; color: var(--muted); }
+  .stepper div::before { content: attr(data-n); display: block; margin: 0 auto 4px;
+    width: 28px; height: 28px; line-height: 28px; border-radius: 50%;
+    background: var(--card); border: 2px solid var(--border); font-weight: 700; }
+  .stepper .active { color: var(--text); font-weight: 600; }
+  .stepper .active::before { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .stepper .done::before { content: "✓"; background: var(--ok); border-color: var(--ok); color: #fff; }
+
+  .step { display: none; }
+  .step.show { display: block; }
+  h2 { font-size: 20px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 16px; }
+  .card { background: var(--card); border: 1px solid var(--border);
+          border-radius: var(--radius); padding: 18px; margin-bottom: 14px; }
+
+  /* Bin picker */
+  .group-title { font-size: 13px; text-transform: uppercase; letter-spacing: .05em;
+                 color: var(--muted); margin: 18px 0 8px; display: flex; justify-content: space-between; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+  .bin-opt { position: relative; background: var(--card); border: 2px solid var(--border);
+             border-radius: 14px; padding: 12px 10px; text-align: center; cursor: pointer;
+             transition: border-color .15s, transform .1s; user-select: none; }
+  .bin-opt:active { transform: scale(.97); }
+  .bin-opt input { position: absolute; opacity: 0; pointer-events: none; }
+  .bin-opt svg { width: 64px; height: 64px; display: block; margin: 0 auto 6px; }
+  .bin-opt .nm { font-size: 13px; font-weight: 600; line-height: 1.25; }
+  .bin-opt .tick { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px;
+                   border-radius: 50%; border: 2px solid var(--border); font-size: 13px;
+                   line-height: 18px; color: transparent; background: var(--card); }
+  .bin-opt.on { border-color: var(--accent); background: var(--accent-soft); }
+  .bin-opt.on .tick { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .bin-opt.locked { cursor: default; opacity: .85; }
+  .bin-opt .rm { position: absolute; top: 6px; left: 8px; border: 0; background: none;
+                 color: var(--muted); font-size: 16px; cursor: pointer; padding: 0; width: auto; }
+  .add-row { display: flex; gap: 8px; margin-top: 10px; }
+  .add-row input { flex: 1; font: inherit; padding: 12px; border-radius: 12px;
+                   border: 1px solid var(--border); background: var(--card); color: var(--text); }
+  .link { background: none; border: 0; color: var(--accent); font: inherit; font-size: 13px;
+          cursor: pointer; padding: 0; width: auto; }
+
+  /* Photo */
+  .upload { display: flex; flex-direction: column; align-items: center; gap: 10px;
+            border: 2px dashed var(--border); text-align: center; cursor: pointer; padding: 28px 18px; }
+  .upload input { display: none; }
+  #preview { max-width: 100%; max-height: 300px; border-radius: 12px; display: none; }
+  .chosen-bins { font-size: 13px; color: var(--muted); }
+
+  /* Buttons */
+  button { font: inherit; font-weight: 600; border: 0; border-radius: 12px;
+           padding: 14px 18px; cursor: pointer; width: 100%; }
+  .primary { background: var(--accent); color: #fff; }
+  .secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+  button:disabled { opacity: .5; cursor: default; }
+  .nav { position: fixed; left: 0; right: 0; bottom: 0; background: var(--bg);
+         border-top: 1px solid var(--border); padding: 12px 16px; }
+  .nav .inner { max-width: 640px; margin: 0 auto; display: flex; gap: 10px; }
+  .nav .secondary { flex: 0 0 34%; }
+
+  /* Result */
+  .result-bin { display: flex; gap: 14px; align-items: center; border-radius: 14px;
+                padding: 14px; color: #fff; margin-bottom: 14px; }
+  .result-bin svg { width: 72px; height: 72px; flex: none; background: rgba(255,255,255,.2); border-radius: 12px; }
+  .result-bin .lbl { font-size: 12px; opacity: .9; text-transform: uppercase; letter-spacing: .06em; }
+  .result-bin .nm { font-size: 21px; font-weight: 700; line-height: 1.2; }
+  .result-bin .where { margin-top: 4px; font-weight: 600; }
+  .row { margin: 12px 0; }
+  .row h3 { font-size: 12px; color: var(--muted); margin: 0 0 4px; text-transform: uppercase; letter-spacing: .05em; }
+  .chips span { display: inline-block; background: var(--bg); border: 1px solid var(--border);
+                border-radius: 999px; padding: 4px 10px; margin: 2px 4px 2px 0; font-size: 14px; }
+  .meter { height: 8px; background: var(--bg); border-radius: 999px; overflow: hidden; }
+  .meter div { height: 100%; background: var(--accent); }
+  .warn { background: #fdecea; color: #8a1c13; border-radius: 12px; padding: 12px; margin-bottom: 12px; }
+  .ok { color: var(--ok); font-weight: 600; }
+  .error { color: var(--err); }
+  .muted { color: var(--muted); }
+  a { color: var(--accent); }
+
+  /* Cleaning */
+  ol.clean { padding-left: 0; list-style: none; counter-reset: s; margin: 0; }
+  ol.clean li { counter-increment: s; position: relative; padding: 10px 0 10px 44px;
+                border-bottom: 1px solid var(--border); }
+  ol.clean li:last-child { border-bottom: 0; }
+  ol.clean li::before { content: counter(s); position: absolute; left: 0; top: 8px;
+    width: 30px; height: 30px; border-radius: 50%; background: var(--accent-soft);
+    color: var(--accent); font-weight: 700; text-align: center; line-height: 30px; }
+  .badge { display: inline-block; font-size: 12px; font-weight: 600; padding: 3px 8px;
+           border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-left: 6px; }
+
+  ul.history { list-style: none; padding: 0; margin: 0; }
+  ul.history li { padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  ul.history li:last-child { border-bottom: 0; }
+  .spinner { display: inline-block; width: 16px; height: 16px; border: 2px solid var(--border);
+             border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite;
+             vertical-align: -3px; margin-right: 6px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Policy match */
+  .source { border-radius: 12px; padding: 12px 14px; margin-bottom: 6px; font-size: 14px; }
+  .source.policy { background: #e7f6ec; color: #14532d; border: 1px solid #b7e1c4; }
+  .source.ai { background: var(--accent-soft); color: var(--text); border: 1px solid var(--border); }
+  .source .pname { margin-top: 4px; }
+  .source .pnote { margin-top: 6px; font-size: 13px; opacity: .85; }
+  .source .badge { background: #c9ecd5; color: #14532d; }
+  .donot { background: #fdecea; color: #8a1c13; border-radius: 12px; padding: 12px; margin: 12px 0; }
+  ul.mix { list-style: none; margin: 0; padding: 0; }
+  ul.mix li { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  ul.mix li:last-child { border-bottom: 0; }
+  .sev { flex: none; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em;
+         padding: 3px 7px; border-radius: 6px; margin-top: 1px; }
+  .sev-critical { background: #c0392b; color: #fff; }
+  .sev-high { background: #f5b7b1; color: #78281f; }
+  .sev-segregation { background: var(--bg); color: var(--muted); border: 1px solid var(--border); }
+  @media (prefers-color-scheme: dark) {
+    .source.policy { background: #12301e; color: #b9f0cd; border-color: #1f5133; }
+    .source .badge { background: #1f5133; color: #b9f0cd; }
+    .donot { background: #3a1512; color: #f5b7b1; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>🔬 Bin-Sight</h1>
+    <p>Snap your lab waste. Find the right bin. Log it safely.</p>
+  </header>
+
+  <nav class="stepper" id="stepper">
+    <div data-n="1">Your bins</div>
+    <div data-n="2">Photo</div>
+    <div data-n="3">Where to throw</div>
+    <div data-n="4">Cleaning</div>
+  </nav>
+
+  <!-- STEP 1: choose bins -->
+  <section class="step" id="step1">
+    <h2>Which bins does your lab have?</h2>
+    <p class="sub">Tap to select. Bin-Sight will only ever send you to a bin you actually have.</p>
+    <div id="binGroups"></div>
+    <div class="group-title"><span>Add a specialist bin</span></div>
+    <p class="sub" style="margin:0 0 4px">Specialist waste changes from lab to lab, e.g. cyanide, osmium, phosphorus.</p>
+    <div class="add-row">
+      <input id="customName" maxlength="40" placeholder="e.g. Cyanide waste">
+      <button class="secondary" id="addCustom" style="width:auto">Add</button>
+    </div>
+  </section>
+
+  <!-- STEP 2: photo -->
+  <section class="step" id="step2">
+    <h2>Take a photo of the waste</h2>
+    <p class="sub">Get labels and hazard symbols in shot if you can.</p>
+    <label class="card upload">
+      <input type="file" id="fileInput" accept="image/*" capture="environment">
+      <img id="preview" alt="Selected waste photo">
+      <span id="uploadText"><strong>📷 Tap to take a photo</strong><br><span class="muted">or choose an image</span></span>
+    </label>
+    <p class="chosen-bins" id="chosenBins"></p>
+    <p id="status" class="muted"></p>
+  </section>
+
+  <!-- STEP 3: result -->
+  <section class="step" id="step3">
+    <div class="card" id="resultCard"></div>
+  </section>
+
+  <!-- STEP 4: cleaning -->
+  <section class="step" id="step4">
+    <div class="card" id="cleanCard"></div>
+  </section>
+
+  <div class="card" style="margin-top:24px">
+    <h2 style="font-size:17px">Disposal log <span class="badge">Solana devnet</span></h2>
+    <ul class="history" id="history"><li class="muted">No disposals yet.</li></ul>
+  </div>
+</main>
+
+<div class="nav"><div class="inner">
+  <button class="secondary" id="backBtn">Back</button>
+  <button class="primary" id="nextBtn">Next</button>
+</div></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g,
+  (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+const STORE_KEY = "binsight.bins.v1";
+let ALL = [];             // bin types from the server
+let selected = new Set(); // selected built-in ids
+let customs = [];         // [{name}]
+let step = 1;
+let file = null;
+let result = null;
+let busy = false;
+
+/* Read a response as JSON even if the server sent plain text */
+async function readJson(res) {
+  const text = await res.text();
+  try { return JSON.parse(text); } catch (_) { return { detail: `Server error (${res.status}): ${text.slice(0, 120)}. Check the uvicorn terminal.` }; }
+}
+
+/* ---------- Bin pictures (inline SVG, coloured per bin) ---------- */
+function binSvg(b) {
+  const c = b.colour, label = esc(b.label || "");
+  const small = (b.label || "").length > 3;
+  const text = (y, fill = "#1d2330") =>
+    `<text x="32" y="${y}" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="800" font-size="${small ? 8 : 11}" fill="${fill}">${label}</text>`;
+  const shapes = {
+    carboy: `<rect x="26" y="5" width="12" height="8" rx="2" fill="#4a4f59"/>
+      <path d="M22 13h20v5l7 7v30a4 4 0 0 1-4 4H19a4 4 0 0 1-4-4V25l7-7z" fill="${c}"/>
+      <path d="M42 18l7 7v30a4 4 0 0 1-4 4h-3z" fill="#000" opacity=".12"/>
+      <rect x="19" y="32" width="26" height="14" rx="2" fill="#fff" opacity=".92"/>${text(42)}`,
+    bin: `<rect x="15" y="20" width="34" height="38" rx="4" fill="${c}"/>
+      <rect x="11" y="13" width="42" height="8" rx="3" fill="${c}"/>
+      <rect x="11" y="13" width="42" height="8" rx="3" fill="#000" opacity=".2"/>
+      <rect x="27" y="9" width="10" height="5" rx="2" fill="#4a4f59"/>
+      <rect x="19" y="30" width="26" height="14" rx="2" fill="#fff" opacity=".92"/>${text(40)}`,
+    box: `<rect x="13" y="22" width="38" height="36" rx="3" fill="${c}"/>
+      <path d="M11 14h42v9H11z" fill="#d64545"/>
+      <rect x="24" y="16" width="16" height="4" rx="2" fill="#7a1f1f"/>
+      <rect x="17" y="32" width="30" height="14" rx="2" fill="#fff" opacity=".92"/>${text(42)}`,
+    bag: `<path d="M24 8l8 9 8-9" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round"/>
+      <path d="M17 19q15-6 30 0l4 36a5 5 0 0 1-5 5H18a5 5 0 0 1-5-5z" fill="${c}"/>
+      <rect x="19" y="32" width="26" height="14" rx="2" fill="#fff" opacity=".92"/>${text(42)}`,
+    stop: `<path d="M22 6h20l14 14v20L42 54H22L8 40V20z" fill="${c}"/>
+      <text x="32" y="38" text-anchor="middle" font-family="system-ui,sans-serif" font-weight="900" font-size="20" fill="#fff">?</text>`,
+  };
+  return `<svg viewBox="0 0 64 64" aria-hidden="true">${shapes[b.shape] || shapes.bin}</svg>`;
+}
+
+/* ---------- Persistence (per browser, so the lab setup survives refreshes) ---------- */
+function save() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify({ ids: [...selected], customs })); } catch (_) {}
+}
+function restore() {
+  try {
+    const s = JSON.parse(localStorage.getItem(STORE_KEY));
+    if (s && Array.isArray(s.ids)) {
+      selected = new Set(s.ids.filter((id) => ALL.some((b) => b.id === id)));
+      customs = Array.isArray(s.customs) ? s.customs : [];
+      return true;
+    }
+  } catch (_) {}
+  return false;
+}
+
+function customBin(c) {
+  return { id: "custom", name: c.name, shape: "carboy", label: c.name.slice(0, 6).toUpperCase(), colour: "#7D5BA6" };
+}
+
+/* ---------- Step 1: picker ---------- */
+function renderPicker() {
+  const groups = {};
+  ALL.forEach((b) => (groups[b.group] ??= []).push(b));
+  let html = "";
+  for (const [g, bins] of Object.entries(groups)) {
+    const selectable = bins.filter((b) => b.selectable !== false);
+    html += `<div class="group-title"><span>${esc(g)}</span>${selectable.length > 1
+      ? `<button class="link" data-group="${esc(g)}">Select all</button>` : ""}</div><div class="grid">`;
+    for (const b of bins) {
+      const locked = b.selectable === false;
+      const on = locked || selected.has(b.id);
+      html += `<label class="bin-opt ${on ? "on" : ""} ${locked ? "locked" : ""}" title="${esc(b.description)}">
+        <input type="checkbox" value="${esc(b.id)}" ${on ? "checked" : ""} ${locked ? "disabled" : ""}>
+        <span class="tick">✓</span>${binSvg(b)}
+        <div class="nm">${esc(b.name)}</div>${locked ? '<div class="muted" style="font-size:11px">always on</div>' : ""}
+      </label>`;
+    }
+    if (g === "Specialist") {
+      customs.forEach((c, i) => {
+        html += `<div class="bin-opt on">
+          <button class="rm" data-rm="${i}" aria-label="Remove ${esc(c.name)}">✕</button>
+          <span class="tick">✓</span>${binSvg(customBin(c))}<div class="nm">${esc(c.name)}</div>
+          <div class="muted" style="font-size:11px">custom</div></div>`;
+      });
+    }
+    html += "</div>";
+  }
+  $("binGroups").innerHTML = html;
+
+  $("binGroups").querySelectorAll("input[type=checkbox]:not([disabled])").forEach((cb) =>
+    cb.addEventListener("change", () => {
+      cb.checked ? selected.add(cb.value) : selected.delete(cb.value);
+      cb.closest(".bin-opt").classList.toggle("on", cb.checked);
+      save(); updateNav();
+    }));
+  $("binGroups").querySelectorAll("[data-group]").forEach((btn) =>
+    btn.addEventListener("click", () => {
+      ALL.filter((b) => b.group === btn.dataset.group && b.selectable !== false).forEach((b) => selected.add(b.id));
+      save(); renderPicker(); updateNav();
+    }));
+  $("binGroups").querySelectorAll("[data-rm]").forEach((btn) =>
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      customs.splice(+btn.dataset.rm, 1);
+      save(); renderPicker(); updateNav();
+    }));
+}
+
+function addCustom() {
+  const name = $("customName").value.trim();
+  if (!name || customs.some((c) => c.name.toLowerCase() === name.toLowerCase())) return;
+  customs.push({ name });
+  $("customName").value = "";
+  save(); renderPicker(); updateNav();
+}
+$("addCustom").addEventListener("click", addCustom);
+$("customName").addEventListener("keydown", (e) => { if (e.key === "Enter") addCustom(); });
+
+const binCount = () => selected.size + customs.length;
+
+/* ---------- Step 2: photo ---------- */
+$("fileInput").addEventListener("change", (e) => {
+  file = e.target.files[0];
+  if (!file) return;
+  $("preview").src = URL.createObjectURL(file);
+  $("preview").style.display = "block";
+  $("uploadText").innerHTML = '<span class="muted">Tap to retake</span>';
+  $("status").textContent = "";
+  updateNav();
+});
+
+async function classify() {
+  busy = true; updateNav();
+  $("status").innerHTML = '<span class="spinner"></span>Analysing with Gemini…';
+  const form = new FormData();
+  form.append("image", file);
+  form.append("bins", JSON.stringify([...selected, ...customs]));
+  try {
+    const res = await fetch("/api/classify", { method: "POST", body: form });
+    const data = await readJson(res);
+    if (!res.ok) throw new Error(data.detail || "Classification failed");
+    result = data;
+    $("status").textContent = "";
+    renderResult();
+    renderCleaning();
+    go(3);
+  } catch (err) {
+    $("status").innerHTML = `<span class="error">${esc(err.message)}</span>`;
+  } finally {
+    busy = false; updateNav();
+  }
+}
+
+/* ---------- Step 3: result ---------- */
+const chips = (l) => l?.length ? l.map((x) => `<span>${esc(x)}</span>`).join("") : '<span class="muted">None noted</span>';
+
+function policyBlocks(r) {
+  const p = r.policy;
+  if (!p) {
+    return { header: `<div class="source ai">🤖 Not in your lab's waste policy, so this is Gemini's best judgement.</div>`, body: "" };
+  }
+  const verify = p.confidence === "Verify locally"
+    ? `<div class="pnote">Policy note: rules for this item vary between labs, so check your local rules.</div>` : "";
+  const header = `<div class="source policy">
+      <div>📋 <strong>Decided by your lab's waste policy</strong> <span class="badge">${esc(p.item_id)}</span></div>
+      <div class="pname">Matched: ${esc(p.item_name)}</div>${verify}
+    </div>`;
+  const mix = p.mixing.length ? `<div class="row"><h3>Mixing rules</h3><ul class="mix">${p.mixing.map((m) =>
+      `<li><span class="sev sev-${esc(m.severity.toLowerCase())}">${esc(m.severity)}</span><div><strong>${esc(m.text)}</strong><br><span class="muted">${esc(m.hazard)}</span></div></li>`).join("")}</ul></div>` : "";
+  const body = `
+    ${p.steps ? `<div class="row"><h3>Before you dispose</h3>${esc(p.steps)}</div>` : ""}
+    ${p.do_not ? `<div class="donot">🚫 <strong>Do NOT:</strong> ${esc(p.do_not)}</div>` : ""}
+    ${mix}`;
+  return { header, body };
+}
+
+function renderResult() {
+  const r = result, c = r.category;
+  const pct = Math.round(r.confidence * 100);
+  const pb = policyBlocks(r);
+  const why = r.policy && r.policy.why
+    ? `${esc(r.policy.why)} <span class="muted">${esc(r.reasoning)}</span>` : `<span class="muted">${esc(r.reasoning)}</span>`;
+  const details = `
+    <div class="row"><h3>What we see</h3>${esc(r.item_description)}</div>
+    <div class="row"><h3>Confidence · ${pct}%</h3><div class="meter"><div style="width:${pct}%"></div></div></div>
+    <div class="row"><h3>Hazards</h3><div class="chips">${chips(r.hazards)}</div></div>
+    <div class="row"><h3>PPE</h3><div class="chips">${chips(r.ppe)}</div></div>`;
+  const caution = r.caution ? `<div class="warn">⚠️ ${esc(r.caution)}</div>` : "";
+
+  if (r.not_waste) {
+    $("resultCard").innerHTML = `${caution}
+      <div class="result-bin" style="background:#1E8449">
+        ${binSvg({ shape: "box", label: "KEEP", colour: "#1E8449" })}
+        <div><div class="lbl">Don't throw it away</div>
+        <div class="nm">This isn't waste</div>
+        <div class="where">${hasCleaning() ? "🧽 Clean it and put it back" : "♻️ Keep or reuse it"}</div></div>
+      </div>
+      ${details}
+      <div class="row"><h3>Why</h3><span class="muted">${esc(r.reasoning)}</span></div>`;
+    return;
+  }
+
+  if (!c) {
+    // None of the lab's selected bins is suitable: tell them which bin they need.
+    const special = /^do not dispose/i.test(r.missing_bin);   // radioactive, animal, unlabelled etc.
+    $("resultCard").innerHTML = `${caution}
+      <div class="result-bin" style="background:${special ? "#7B241C" : "#7D5BA6"}">
+        ${binSvg({ shape: special ? "stop" : "carboy", label: "?", colour: special ? "#7B241C" : "#7D5BA6" })}
+        <div><div class="lbl">${special ? "Special procedure" : "None of your bins fit. This needs"}</div>
+        <div class="nm">${esc(r.missing_bin)}</div></div>
+      </div>
+      ${pb.header}
+      ${details}
+      ${pb.body}
+      <div class="row"><h3>Why</h3>${why}</div>
+      ${special ? "" : `<button class="primary" id="addMissingBtn" style="margin-top:8px">+ My lab has this bin: add it and re-check</button>`}`;
+    const add = $("addMissingBtn");
+    if (add) add.addEventListener("click", () => {
+      const known = ALL.find((b) => b.name.toLowerCase() === r.missing_bin.toLowerCase());
+      if (known) selected.add(known.id);
+      else if (!customs.some((x) => x.name.toLowerCase() === r.missing_bin.toLowerCase())) customs.push({ name: r.missing_bin });
+      save(); renderPicker();
+      go(2); classify();
+    });
+    return;
+  }
+
+  const alt = r.low_confidence && r.alternative && !r.policy
+    ? `<div class="row"><h3>Not 100% sure?</h3>It could also be <strong>${esc(r.alternative.name)}</strong>. Check the label on the item to decide.</div>` : "";
+  $("resultCard").innerHTML = `${caution}
+    ${r.low_confidence ? `<div class="warn" style="background:#fff4d6;color:#7a5200">🔎 The photo wasn't completely clear. Check the label matches before you pour. Retaking the photo closer up can help.</div>` : ""}
+    <div class="result-bin" style="background:${esc(c.colour)}">
+      ${binSvg(c)}
+      <div><div class="lbl">Throw it in</div>
+      <div class="nm">${esc(c.name)}</div><div class="where">🗑️ ${esc(c.bin)}</div></div>
+    </div>
+    ${pb.header}
+    ${details}
+    ${pb.body}
+    <div class="row"><h3>How to dispose</h3>${esc(c.instructions)}</div>
+    <div class="row"><h3>Why</h3>${why}</div>
+    ${alt}
+    <button class="secondary" id="disposeBtn" style="margin-top:8px">✓ I've disposed of it: log on Solana</button>
+    <p id="disposeStatus" class="muted"></p>`;
+  $("disposeBtn").addEventListener("click", logDisposal);
+}
+
+async function logDisposal() {
+  const btn = $("disposeBtn");
+  btn.disabled = true;
+  $("disposeStatus").innerHTML = '<span class="spinner"></span>Writing to Solana devnet…';
+  try {
+    const res = await fetch("/api/dispose", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        category_id: result.category.id,
+        category_name: result.category.name,
+        image_hash: result.image_hash,
+      }),
+    });
+    const data = await readJson(res);
+    if (!res.ok) throw new Error(data.detail || "Logging failed");
+    $("disposeStatus").innerHTML = `<span class="ok">✓ Logged on-chain.</span> <a href="${esc(data.explorer)}" target="_blank" rel="noopener">View transaction</a>`;
+    btn.remove();
+    loadHistory();
+  } catch (err) {
+    $("disposeStatus").innerHTML = `<span class="error">${esc(err.message)}</span>`;
+    btn.disabled = false;
+  }
+}
+
+/* ---------- Step 4: cleaning (optional) ---------- */
+const hasCleaning = () => !!(result && result.cleaning && result.cleaning.relevant && result.cleaning.steps.length);
+
+function renderCleaning() {
+  if (!hasCleaning()) { $("cleanCard").innerHTML = ""; return; }
+  const cl = result.cleaning;
+  $("cleanCard").innerHTML = `
+    <h2>🧽 How to clean it</h2>
+    <p class="sub">${esc(cl.equipment || "This equipment")} is reusable. Clean it before putting it away.</p>
+    <ol class="clean">${cl.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
+    <p class="muted" style="font-size:13px;margin-bottom:0">Always follow your lab's own cleaning procedures.</p>`;
+}
+
+/* ---------- Navigation ---------- */
+function go(n) {
+  step = n;
+  document.querySelectorAll(".step").forEach((s, i) => s.classList.toggle("show", i + 1 === n));
+  document.querySelectorAll("#stepper div").forEach((d, i) => {
+    d.classList.toggle("active", i + 1 === n);
+    d.classList.toggle("done", i + 1 < n);
+  });
+  if (n === 2) {
+    const names = [...ALL.filter((b) => selected.has(b.id)).map((b) => b.name), ...customs.map((c) => c.name)];
+    $("chosenBins").textContent = `Sorting into ${names.length} bin${names.length === 1 ? "" : "s"}: ${names.join(", ")}.`;
+  }
+  updateNav();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function resetForNewItem() {
+  file = null; result = null;
+  $("fileInput").value = "";
+  $("preview").style.display = "none";
+  $("uploadText").innerHTML = '<strong>📷 Tap to take a photo</strong><br><span class="muted">or choose an image</span>';
+  go(2);
+}
+
+function updateNav() {
+  const back = $("backBtn"), next = $("nextBtn");
+  back.style.visibility = step === 1 ? "hidden" : "visible";
+  if (step === 1) {
+    next.textContent = binCount() ? `Next: add photo (${binCount()} bins)` : "Select at least one bin";
+    next.disabled = !binCount();
+  } else if (step === 2) {
+    next.textContent = busy ? "Analysing…" : "Identify waste";
+    next.disabled = !file || busy;
+  } else if (step === 3) {
+    next.textContent = hasCleaning() ? "Next: how to clean it" : "Scan another item";
+    next.disabled = false;
+  } else {
+    next.textContent = "Scan another item";
+    next.disabled = false;
+  }
+}
+
+$("nextBtn").addEventListener("click", () => {
+  if (step === 1) go(2);
+  else if (step === 2) classify();
+  else if (step === 3) hasCleaning() ? go(4) : resetForNewItem();
+  else resetForNewItem();
+});
+$("backBtn").addEventListener("click", () => go(Math.max(1, step - 1)));
+
+/* ---------- History ---------- */
+async function loadHistory() {
+  try {
+    const items = await (await fetch("/api/history")).json();
+    if (!items.length) return;
+    $("history").innerHTML = items.slice(0, 10).map((h) => `
+      <li><strong>${esc(h.category_name)}</strong> · bin ${esc(h.bin)}<br>
+      <span class="muted">${new Date(h.ts * 1000).toLocaleString()}</span> ·
+      <a href="${esc(h.explorer)}" target="_blank" rel="noopener">tx ${esc(h.signature.slice(0, 8))}…</a></li>`).join("");
+  } catch (_) {}
+}
+
+/* ---------- Start ---------- */
+(async function init() {
+  try {
+    ALL = await (await fetch("/api/bins")).json();
+  } catch (_) {
+    $("binGroups").innerHTML = '<p class="error">Could not load bins. Is the server running?</p>';
+    return;
+  }
+  if (!restore()) ALL.filter((b) => b.default && b.selectable !== false).forEach((b) => selected.add(b.id));
+  renderPicker();
+  go(1);
+  loadHistory();
+})();
+</script>
+</body>
+</html>

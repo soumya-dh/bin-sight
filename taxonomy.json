@@ -1,0 +1,2284 @@
+{
+ "source": "lab_waste_taxonomy.xlsx",
+ "categories": {
+  "GEN": {
+   "id": "GEN",
+   "name": "General (non-hazardous) waste",
+   "container": "Black bag",
+   "colour": "#333333",
+   "handling": "Only for genuinely uncontaminated items. If in doubt, do not default to this bin.",
+   "notes": "If any doubt, choose UNK, not GEN.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "REC": {
+   "id": "REC",
+   "name": "Dry recycling",
+   "container": "Recycling bin (blue)",
+   "colour": "#2874A6",
+   "handling": "Empty, dry, hazard labels removed.",
+   "notes": "Anything that touched samples or reagents is not recycling.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "GLS": {
+   "id": "GLS",
+   "name": "Clean glass",
+   "container": "Glass / broken-glass box",
+   "colour": "#7DCEA0",
+   "handling": "Triple-rinse empty chemical bottles (rinsate goes to the correct liquid stream), deface labels. Broken glass goes in a rigid box, never a bag.",
+   "notes": "Contaminated glass goes to a sharps category instead.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "BIO-AUT": {
+   "id": "BIO-AUT",
+   "name": "Biological solids - autoclave route",
+   "container": "Autoclave bag in rigid bin (orange / per local scheme)",
+   "colour": "#F39C12",
+   "handling": "Aspirate free liquid first. Bag loosely, add autoclave indicator tape, autoclave before disposal.",
+   "notes": "Never add solvents, bleach, guanidinium, formaldehyde or cytotoxics.",
+   "route_flag": "AUTOCLAVE_ROUTE",
+   "out_of_scope": false
+  },
+  "BIO-GM": {
+   "id": "BIO-GM",
+   "name": "GM / transduced material - inactivate",
+   "container": "Labelled GM autoclave bag",
+   "colour": "#D68910",
+   "handling": "Inactivate (validated autoclave cycle or chemical) before it leaves the lab. Viral vectors follow the containment-level SOP. Label as GM.",
+   "notes": "Follow the lab's GM risk assessment.",
+   "route_flag": "AUTOCLAVE_ROUTE",
+   "out_of_scope": false
+  },
+  "BIO-INC": {
+   "id": "BIO-INC",
+   "name": "Biological - incineration",
+   "container": "Yellow clinical waste bin / bag",
+   "colour": "#F4D03F",
+   "handling": "Seal, label, hold for clinical waste collection.",
+   "notes": "Follow the institution's human tissue and clinical waste policy.",
+   "route_flag": "INCINERATION_ROUTE",
+   "out_of_scope": false
+  },
+  "BIO-LIQ": {
+   "id": "BIO-LIQ",
+   "name": "Biological liquids",
+   "container": "Aspirator flask containing disinfectant",
+   "colour": "#48C9B0",
+   "handling": "Inactivate with hypochlorite at the validated concentration and contact time in your SOP, then drain; or autoclave in a suitable vessel (never once bleach is added).",
+   "notes": "Hazardous additives (solvents, guanidinium, azide, cytotoxics) mean it is NOT this category.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "SHP-INF": {
+   "id": "SHP-INF",
+   "name": "Sharps - biological",
+   "container": "Sharps bin (orange lid)",
+   "colour": "#E67E22",
+   "handling": "Do not recap or bend. Fill to the line only. Close and label when full.",
+   "notes": "",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "SHP-CHEM": {
+   "id": "SHP-CHEM",
+   "name": "Sharps - chemical / fixative",
+   "container": "Sharps bin (yellow lid)",
+   "colour": "#F7DC6F",
+   "handling": "As for biological sharps; write the contaminant on the label.",
+   "notes": "CMR-contaminated sharps: label clearly and notify the waste coordinator.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CHEM-NH": {
+   "id": "CHEM-NH",
+   "name": "Non-halogenated solvents",
+   "container": "Flammable solvent carboy",
+   "colour": "#5DADE2",
+   "handling": "Keep halogenated solvents out. Vented cap, fume cupboard for decanting, list every constituent on the label.",
+   "notes": "Never add oxidisers (bleach, nitric acid, peroxide).",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CHEM-HAL": {
+   "id": "CHEM-HAL",
+   "name": "Halogenated solvents (incl. phenol-chloroform)",
+   "container": "Halogenated solvent carboy (glass / solvent-resistant)",
+   "colour": "#A569BD",
+   "handling": "Fume cupboard. Keep separate from non-halogenated solvents (different disposal route).",
+   "notes": "Never bleach or acidify.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CHEM-AQ": {
+   "id": "CHEM-AQ",
+   "name": "Hazardous aqueous",
+   "container": "Labelled aqueous waste carboy",
+   "colour": "#85C1E9",
+   "handling": "Collect, list all constituents, keep azide away from acids and metal.",
+   "notes": "Never down the drain.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CHEM-ACID": {
+   "id": "CHEM-ACID",
+   "name": "Acid waste",
+   "container": "Acid-compatible labelled carboy",
+   "colour": "#EC7063",
+   "handling": "Keep apart from bases, bleach, azide, cyanides and organics.",
+   "notes": "Do not neutralise unless your SOP permits.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CHEM-BASE": {
+   "id": "CHEM-BASE",
+   "name": "Alkaline waste",
+   "container": "Base-compatible labelled carboy",
+   "colour": "#F1948A",
+   "handling": "Keep apart from acids and aluminium.",
+   "notes": "Do not neutralise unless your SOP permits.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CHEM-GUA": {
+   "id": "CHEM-GUA",
+   "name": "Guanidinium / phenol lysis waste",
+   "container": "Dedicated labelled carboy (not shared with bleach waste)",
+   "colour": "#AF601A",
+   "handling": "Own stream. Never bleach, never acidify, never autoclave.",
+   "notes": "Check the kit safety sheet for which buffers contain guanidinium.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CHEM-SOL": {
+   "id": "CHEM-SOL",
+   "name": "Chemically contaminated solids",
+   "container": "Rigid labelled chemical solid waste bin / double bag",
+   "colour": "#ABB2B9",
+   "handling": "Drain free liquid first. Never autoclave. Keep CMR items separate.",
+   "notes": "",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CMR-LIQ": {
+   "id": "CMR-LIQ",
+   "name": "CMR liquids (carcinogen / mutagen / reprotoxic)",
+   "container": "Sealed labelled bottle in secondary containment",
+   "colour": "#C0392B",
+   "handling": "Own stream. Never drain. Some sites require specific inactivation or filtration first.",
+   "notes": "Check the SDS for H340 / H350 / H360 hazard statements.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CMR-SOL": {
+   "id": "CMR-SOL",
+   "name": "CMR solids",
+   "container": "Sealed labelled bin / double bag",
+   "colour": "#E74C3C",
+   "handling": "Own stream. Never autoclave, never general waste.",
+   "notes": "",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CYT": {
+   "id": "CYT",
+   "name": "Cytotoxic / cytostatic",
+   "container": "Purple-lidded bin / purple bag",
+   "colour": "#6C3483",
+   "handling": "Never autoclave or bleach-and-drain. Purple stream for incineration.",
+   "notes": "Purple-lidded sharps bins for sharps.",
+   "route_flag": "INCINERATION_ROUTE",
+   "out_of_scope": false
+  },
+  "RAD": {
+   "id": "RAD",
+   "name": "Radioactive - OUT OF SCOPE",
+   "container": "Do not dispose - refer to Radiation Protection Supervisor",
+   "colour": "#239B56",
+   "handling": "The tool must not classify this. Escalate.",
+   "notes": "Always escalate.",
+   "route_flag": "",
+   "out_of_scope": true
+  },
+  "DRAIN": {
+   "id": "DRAIN",
+   "name": "Non-hazardous aqueous - drain with flush",
+   "container": "Sink (flush with plenty of water)",
+   "colour": "#D6EAF8",
+   "handling": "Small volumes only, roughly pH 6-10, run water before and after. Local trade-effluent rules apply.",
+   "notes": "Any item flagged NO_DRAIN must never land here.",
+   "route_flag": "DRAIN_ROUTE",
+   "out_of_scope": false
+  },
+  "UNK": {
+   "id": "UNK",
+   "name": "Unsure - escalate",
+   "container": "Do not dispose - label and quarantine",
+   "colour": "#17202A",
+   "handling": "Ask the supervisor or safety officer. The tool defaults here when confidence is low.",
+   "notes": "This is the safe fallback.",
+   "route_flag": "",
+   "out_of_scope": true
+  },
+  "SHP-CYT": {
+   "id": "SHP-CYT",
+   "name": "Sharps - cytotoxic",
+   "container": "Sharps bin (purple lid)",
+   "colour": "#8E44AD",
+   "handling": "As for biological sharps; never mix with other sharps.",
+   "notes": "Incinerated via the cytotoxic stream.",
+   "route_flag": "INCINERATION_ROUTE",
+   "out_of_scope": false
+  },
+  "PHARM": {
+   "id": "PHARM",
+   "name": "Pharmaceutical (non-cytotoxic)",
+   "container": "Pharmaceutical waste bin (blue lid)",
+   "colour": "#3498DB",
+   "handling": "Keep in original packaging where possible. Never drain.",
+   "notes": "Controlled drugs follow a separate legal process - escalate.",
+   "route_flag": "INCINERATION_ROUTE",
+   "out_of_scope": false
+  },
+  "REACT": {
+   "id": "REACT",
+   "name": "Reactive / unstable chemicals",
+   "container": "Own labelled container; vented cap if the site uses them",
+   "colour": "#FF5733",
+   "handling": "Never combine with any other waste. Fume cupboard. Quench only under an approved SOP by trained staff.",
+   "notes": "If crystals are visible or the container is old, do not move it - call the safety officer.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "LABPACK": {
+   "id": "LABPACK",
+   "name": "Surplus reagents (lab pack)",
+   "container": "Original container, listed on the lab-pack inventory",
+   "colour": "#A04000",
+   "handling": "Do not decant or combine. Keep the label legible, list on the inventory, store by hazard class.",
+   "notes": "Collected by the specialist contractor as a lab pack.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "METAL": {
+   "id": "METAL",
+   "name": "Heavy-metal waste",
+   "container": "Labelled metal-waste container",
+   "colour": "#7F8C8D",
+   "handling": "Own stream. Never drain. Keep apart from azide.",
+   "notes": "Silver stain waste belongs here.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "TAKEBACK": {
+   "id": "TAKEBACK",
+   "name": "Supplier take-back packaging",
+   "container": "Collection point / return to supplier",
+   "colour": "#A9DFBF",
+   "handling": "Clean and dry; remove labels where required.",
+   "notes": "Only where the supplier runs a scheme - otherwise recycling or general waste.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "REUSE": {
+   "id": "REUSE",
+   "name": "Reuse / redistribute",
+   "container": "Chemical exchange shelf / board",
+   "colour": "#ABEBC6",
+   "handling": "Advertise to other labs before disposal; check expiry and storage conditions.",
+   "notes": "Not for opened, expired or unlabelled items.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "WEEE": {
+   "id": "WEEE",
+   "name": "Electrical and electronic equipment (WEEE)",
+   "container": "WEEE collection (tagged)",
+   "colour": "#566573",
+   "handling": "Decontaminate and tag as safe before collection.",
+   "notes": "Contact the estates or equipment team.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "BATT": {
+   "id": "BATT",
+   "name": "Batteries",
+   "container": "Battery collection tub",
+   "colour": "#F5B041",
+   "handling": "Tape the terminals of lithium cells. Do not bin.",
+   "notes": "",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "LAMP": {
+   "id": "LAMP",
+   "name": "Lamps and tubes",
+   "container": "Lamp collection box",
+   "colour": "#F9E79F",
+   "handling": "Handle carefully; many contain mercury.",
+   "notes": "",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "CYL": {
+   "id": "CYL",
+   "name": "Gas cylinders",
+   "container": "Return to supplier / designated cylinder store",
+   "colour": "#5499C7",
+   "handling": "Close valve, cap, label as empty or full, store upright and secured.",
+   "notes": "Never dispose of locally.",
+   "route_flag": "",
+   "out_of_scope": false
+  },
+  "ANI": {
+   "id": "ANI",
+   "name": "Animal waste - OUT OF SCOPE",
+   "container": "Do not dispose - follow the animal facility procedure",
+   "colour": "#145A32",
+   "handling": "The tool must not classify this. Escalate.",
+   "notes": "Always escalate.",
+   "route_flag": "",
+   "out_of_scope": true
+  },
+  "HICON": {
+   "id": "HICON",
+   "name": "High-containment pathogens - OUT OF SCOPE",
+   "container": "Do not dispose - follow the containment facility procedure",
+   "colour": "#7B241C",
+   "handling": "The tool must not classify this. Escalate.",
+   "notes": "Always escalate.",
+   "route_flag": "",
+   "out_of_scope": true
+  }
+ },
+ "items": [
+  {
+   "id": "I001",
+   "name": "Used gloves - no biological or chemical contact",
+   "aliases": [
+    "nitrile gloves",
+    "PPE",
+    "latex"
+   ],
+   "category_id": "GEN",
+   "steps": "Remove without touching the outer surface.",
+   "flags": [],
+   "do_not": "Not if the gloves touched cell culture, reagents or lysates.",
+   "why": "Nothing hazardous present.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I002",
+   "name": "Bench roll / paper towels - uncontaminated",
+   "aliases": [
+    "tissue",
+    "blue roll"
+   ],
+   "category_id": "GEN",
+   "steps": "",
+   "flags": [],
+   "do_not": "",
+   "why": "Nothing hazardous present.",
+   "confidence": "High"
+  },
+  {
+   "id": "I003",
+   "name": "Wipes - clean surface, 70% ethanol only",
+   "aliases": [
+    "ethanol wipes",
+    "surface wipes"
+   ],
+   "category_id": "GEN",
+   "steps": "",
+   "flags": [],
+   "do_not": "Not if wiping up spills of anything other than ethanol.",
+   "why": "Trace ethanol only, no contamination.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I004",
+   "name": "Cardboard and paper packaging (kit boxes, sleeves)",
+   "aliases": [
+    "kit box",
+    "carton"
+   ],
+   "category_id": "REC",
+   "steps": "Flatten; remove hazard labels.",
+   "flags": [],
+   "do_not": "",
+   "why": "Clean packaging.",
+   "confidence": "High"
+  },
+  {
+   "id": "I005",
+   "name": "Empty tip racks / plastic packaging - clean and unused",
+   "aliases": [
+    "tip box",
+    "rack"
+   ],
+   "category_id": "REC",
+   "steps": "Only if clean.",
+   "flags": [],
+   "do_not": "Not if it held used consumables.",
+   "why": "Clean plastic.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I006",
+   "name": "Empty reagent bottles / clean glass (rinsed)",
+   "aliases": [
+    "bottle",
+    "Schott",
+    "Duran",
+    "empty bottle"
+   ],
+   "category_id": "GLS",
+   "steps": "Triple-rinse; send rinsate to the correct liquid stream; deface label; remove cap.",
+   "flags": [],
+   "do_not": "Do not bin unrinsed bottles that held hazardous chemicals.",
+   "why": "Rinsed empty glass is non-hazardous.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I007",
+   "name": "Broken glass - uncontaminated (Pasteur pipettes, slides, coverslips)",
+   "aliases": [
+    "glass pipette",
+    "coverslip",
+    "microscope slide"
+   ],
+   "category_id": "GLS",
+   "steps": "Rigid broken-glass box only, never a bag.",
+   "flags": [
+    "SHARP"
+   ],
+   "do_not": "",
+   "why": "Sharp but not contaminated.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I008",
+   "name": "Cell culture flasks, plates and dishes (non-GM, media aspirated)",
+   "aliases": [
+    "T75",
+    "T25",
+    "6-well",
+    "96-well",
+    "petri dish"
+   ],
+   "category_id": "BIO-AUT",
+   "steps": "Aspirate media into the biological liquid waste first; bag loosely; autoclave.",
+   "flags": [
+    "BIOHAZARD"
+   ],
+   "do_not": "No bleach, solvents or cytotoxic-treated cells in this bag.",
+   "why": "Biological material, autoclave route.",
+   "confidence": "High"
+  },
+  {
+   "id": "I009",
+   "name": "Serological pipettes (plastic) - cell culture",
+   "aliases": [
+    "stripette",
+    "pipette"
+   ],
+   "category_id": "BIO-AUT",
+   "steps": "Tip-down in a rigid pipette discard tub; autoclave the tub.",
+   "flags": [
+    "BIOHAZARD",
+    "SHARP"
+   ],
+   "do_not": "",
+   "why": "Biological contact with a puncture risk.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I010",
+   "name": "Pipette tips and microtubes - biological sample contact",
+   "aliases": [
+    "tips",
+    "eppendorf",
+    "microcentrifuge tube"
+   ],
+   "category_id": "BIO-AUT",
+   "steps": "Autoclave route.",
+   "flags": [
+    "BIOHAZARD"
+   ],
+   "do_not": "Not if contaminated with solvents, guanidinium, CMR agents or cytotoxics.",
+   "why": "Biological contact only.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I011",
+   "name": "Gloves - biological contact (cell culture, lysates)",
+   "aliases": [
+    "gloves",
+    "PPE"
+   ],
+   "category_id": "BIO-AUT",
+   "steps": "Autoclave route.",
+   "flags": [
+    "BIOHAZARD"
+   ],
+   "do_not": "",
+   "why": "Biological contact.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I012",
+   "name": "Used cryovials (empty)",
+   "aliases": [
+    "cryotube",
+    "freezing vial"
+   ],
+   "category_id": "BIO-AUT",
+   "steps": "Autoclave route.",
+   "flags": [
+    "BIOHAZARD"
+   ],
+   "do_not": "",
+   "why": "Biological contact.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I013",
+   "name": "Aspirated media, PBS and trypsin washes (no hazardous additives)",
+   "aliases": [
+    "culture media",
+    "supernatant",
+    "DMEM",
+    "RPMI",
+    "FBS"
+   ],
+   "category_id": "BIO-LIQ",
+   "steps": "Inactivate with hypochlorite per your SOP then drain, or autoclave in a suitable vessel.",
+   "flags": [
+    "BIOHAZARD"
+   ],
+   "do_not": "Do not add bleach if guanidinium, acid, formaldehyde, ammonium or solvents are present. Do not autoclave after bleach is added.",
+   "why": "Biological liquid needing inactivation.",
+   "confidence": "High"
+  },
+  {
+   "id": "I014",
+   "name": "Transfected / virally transduced cell waste (solids and liquids)",
+   "aliases": [
+    "lentivirus",
+    "transfection",
+    "GM",
+    "transduced cells"
+   ],
+   "category_id": "BIO-GM",
+   "steps": "Inactivate before it leaves the lab; vectors follow the containment-level SOP; label as GM.",
+   "flags": [
+    "GM",
+    "BIOHAZARD"
+   ],
+   "do_not": "Do not mix with non-GM waste if policy requires separation.",
+   "why": "GM material must be inactivated.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I015",
+   "name": "Cell culture waste from cytotoxic drug treatment",
+   "aliases": [
+    "cisplatin",
+    "doxorubicin",
+    "drug treated cells",
+    "chemotherapy"
+   ],
+   "category_id": "CYT",
+   "steps": "Collect in the purple stream.",
+   "flags": [
+    "CYTOTOXIC",
+    "TOXIC",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "Do not autoclave or bleach-and-drain.",
+   "why": "Cytotoxic exposure overrides the biological route.",
+   "confidence": "High"
+  },
+  {
+   "id": "I016",
+   "name": "Human / animal tissue, FFPE blocks, unfixed samples",
+   "aliases": [
+    "tissue",
+    "biopsy",
+    "FFPE",
+    "mouse tissue"
+   ],
+   "category_id": "BIO-INC",
+   "steps": "Seal, label, hold for clinical waste collection.",
+   "flags": [
+    "BIOHAZARD"
+   ],
+   "do_not": "",
+   "why": "Tissue goes to incineration.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I017",
+   "name": "Needles and syringes (biological)",
+   "aliases": [
+    "needle",
+    "syringe"
+   ],
+   "category_id": "SHP-INF",
+   "steps": "Do not recap or bend; fill to the line only.",
+   "flags": [
+    "SHARP",
+    "BIOHAZARD"
+   ],
+   "do_not": "",
+   "why": "Sharps bin required.",
+   "confidence": "High"
+  },
+  {
+   "id": "I018",
+   "name": "Scalpel / razor blades",
+   "aliases": [
+    "scalpel",
+    "razor",
+    "blade"
+   ],
+   "category_id": "SHP-INF",
+   "steps": "Fill to the line only.",
+   "flags": [
+    "SHARP"
+   ],
+   "do_not": "Not if contaminated with CMR agents (see sharps - chemical).",
+   "why": "Sharps bin required.",
+   "confidence": "High"
+  },
+  {
+   "id": "I019",
+   "name": "Broken glass or slides contaminated with biological material",
+   "aliases": [
+    "contaminated coverslip",
+    "contaminated slide"
+   ],
+   "category_id": "SHP-INF",
+   "steps": "Sharps bin, not a glass box.",
+   "flags": [
+    "SHARP",
+    "BIOHAZARD"
+   ],
+   "do_not": "",
+   "why": "Contaminated sharp.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I020",
+   "name": "Sharps contaminated with chemicals (e.g. EtBr gel-cutting blades, stain-contaminated glass)",
+   "aliases": [
+    "gel cutter",
+    "contaminated blade"
+   ],
+   "category_id": "SHP-CHEM",
+   "steps": "Write the contaminant on the label.",
+   "flags": [
+    "SHARP",
+    "TOXIC"
+   ],
+   "do_not": "",
+   "why": "Chemical contamination needs the chemical sharps stream.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I021",
+   "name": "Polyacrylamide gels (after SDS-PAGE)",
+   "aliases": [
+    "SDS-PAGE gel",
+    "protein gel",
+    "Bis-Tris gel",
+    "precast gel"
+   ],
+   "category_id": "BIO-AUT",
+   "steps": "Collect in a sealed bag.",
+   "flags": [
+    "TOXIC"
+   ],
+   "do_not": "Do not autoclave.",
+   "why": "Local lab policy: protein gels and blot membranes go to the autoclave route.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I022",
+   "name": "Unpolymerised acrylamide / bis-acrylamide solution or powder",
+   "aliases": [
+    "acrylamide",
+    "bis-acrylamide",
+    "gel casting solution"
+   ],
+   "category_id": "CMR-LIQ",
+   "steps": "Powder handled in a fume cupboard; double glove.",
+   "flags": [
+    "CARCINOGEN",
+    "MUTAGEN",
+    "TOXIC",
+    "NO_DRAIN"
+   ],
+   "do_not": "Never drain.",
+   "why": "Carcinogen and mutagen.",
+   "confidence": "High"
+  },
+  {
+   "id": "I023",
+   "name": "SDS-PAGE running buffer (Tris-glycine-SDS)",
+   "aliases": [
+    "running buffer",
+    "Tris glycine"
+   ],
+   "category_id": "DRAIN",
+   "steps": "Flush with plenty of water.",
+   "flags": [],
+   "do_not": "Not if it contains azide or other additives.",
+   "why": "Low hazard at working concentration.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I024",
+   "name": "Western transfer buffer (contains methanol)",
+   "aliases": [
+    "transfer buffer",
+    "towbin"
+   ],
+   "category_id": "CHEM-NH",
+   "steps": "",
+   "flags": [
+    "FLAMMABLE",
+    "ORGANIC",
+    "NONHAL",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No bleach.",
+   "why": "Methanol content; some sites allow small volumes via drain.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I025",
+   "name": "TBS-T / PBS-T wash buffers (no azide)",
+   "aliases": [
+    "TBST",
+    "PBST",
+    "wash buffer"
+   ],
+   "category_id": "DRAIN",
+   "steps": "Flush with plenty of water.",
+   "flags": [],
+   "do_not": "Not if it contains azide.",
+   "why": "Low hazard.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I026",
+   "name": "Buffers containing sodium azide (antibody diluent, storage buffers)",
+   "aliases": [
+    "sodium azide",
+    "NaN3",
+    "antibody storage"
+   ],
+   "category_id": "CHEM-AQ",
+   "steps": "Label with azide.",
+   "flags": [
+    "AZIDE",
+    "TOXIC",
+    "NO_DRAIN"
+   ],
+   "do_not": "No acids (hydrazoic acid gas). Never drain: azide forms explosive metal azides in plumbing.",
+   "why": "Acutely toxic and reactive.",
+   "confidence": "High"
+  },
+  {
+   "id": "I027",
+   "name": "Western blot membranes (PVDF / nitrocellulose) after imaging",
+   "aliases": [
+    "PVDF",
+    "nitrocellulose",
+    "blot"
+   ],
+   "category_id": "BIO-AUT",
+   "steps": "Collect with chemical solids.",
+   "flags": [],
+   "do_not": "Do not autoclave.",
+   "why": "Local lab policy: protein gels and blot membranes go to the autoclave route.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I028",
+   "name": "ECL / chemiluminescent substrate (used)",
+   "aliases": [
+    "ECL",
+    "luminol",
+    "Clarity"
+   ],
+   "category_id": "CHEM-AQ",
+   "steps": "",
+   "flags": [
+    "IRRITANT",
+    "NO_DRAIN"
+   ],
+   "do_not": "",
+   "why": "Conservative collection of reactive reagent.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I029",
+   "name": "Coomassie stain / destain (methanol-acetic acid)",
+   "aliases": [
+    "Coomassie",
+    "destain",
+    "Brilliant Blue"
+   ],
+   "category_id": "CHEM-NH",
+   "steps": "",
+   "flags": [
+    "FLAMMABLE",
+    "ORGANIC",
+    "NONHAL",
+    "ACID",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No bleach.",
+   "why": "Flammable with acid content; some sites split acidic fractions.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I030",
+   "name": "RIPA / detergent lysis buffer with lysate (no guanidinium)",
+   "aliases": [
+    "RIPA",
+    "lysate",
+    "NP-40",
+    "lysis buffer"
+   ],
+   "category_id": "CHEM-AQ",
+   "steps": "Collect and label.",
+   "flags": [
+    "IRRITANT",
+    "NO_DRAIN"
+   ],
+   "do_not": "Not for guanidinium buffers (see lysis waste).",
+   "why": "Detergent plus biological origin; conservative.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I031",
+   "name": "Agarose gels stained with ethidium bromide",
+   "aliases": [
+    "EtBr gel",
+    "ethidium bromide gel",
+    "DNA gel"
+   ],
+   "category_id": "CMR-SOL",
+   "steps": "Sealed bag.",
+   "flags": [
+    "MUTAGEN",
+    "TOXIC",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "Never general waste.",
+   "why": "Mutagen.",
+   "confidence": "High"
+  },
+  {
+   "id": "I032",
+   "name": "TAE / TBE buffer containing ethidium bromide",
+   "aliases": [
+    "EtBr buffer"
+   ],
+   "category_id": "CMR-LIQ",
+   "steps": "Some sites filter through charcoal first.",
+   "flags": [
+    "MUTAGEN",
+    "NO_DRAIN"
+   ],
+   "do_not": "Never drain.",
+   "why": "Mutagen.",
+   "confidence": "High"
+  },
+  {
+   "id": "I033",
+   "name": "Gloves, tips and paper contaminated with EtBr, DAB or other CMR agents",
+   "aliases": [
+    "CMR gloves",
+    "EtBr gloves"
+   ],
+   "category_id": "CMR-SOL",
+   "steps": "Sealed bag.",
+   "flags": [
+    "MUTAGEN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "",
+   "why": "CMR contamination.",
+   "confidence": "High"
+  },
+  {
+   "id": "I034",
+   "name": "Agarose gels with SYBR Safe / GelRed / similar stains",
+   "aliases": [
+    "SYBR Safe",
+    "GelRed",
+    "safe stain"
+   ],
+   "category_id": "CHEM-SOL",
+   "steps": "",
+   "flags": [],
+   "do_not": "",
+   "why": "Marketed as safer but disposal advice varies by site.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I035",
+   "name": "TAE / TBE buffer (no stain)",
+   "aliases": [
+    "TAE",
+    "TBE"
+   ],
+   "category_id": "DRAIN",
+   "steps": "Flush with plenty of water.",
+   "flags": [],
+   "do_not": "Not if stained with EtBr.",
+   "why": "Low hazard at working concentration.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I036",
+   "name": "PCR / qPCR tubes, plates and tips with DNA template",
+   "aliases": [
+    "PCR",
+    "qPCR",
+    "thermocycler plate",
+    "8-strip"
+   ],
+   "category_id": "BIO-AUT",
+   "steps": "Autoclave route (some sites allow general waste if non-GM and no human material).",
+   "flags": [
+    "BIOHAZARD"
+   ],
+   "do_not": "Treat as GM waste if template is recombinant.",
+   "why": "Template DNA contact.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I037",
+   "name": "TRIzol / TRI Reagent organic phase (phenol-chloroform)",
+   "aliases": [
+    "TRIzol",
+    "TRI Reagent",
+    "phenol chloroform",
+    "Qiazol"
+   ],
+   "category_id": "CHEM-HAL",
+   "steps": "Glass or solvent-resistant container; fume cupboard.",
+   "flags": [
+    "PHENOL",
+    "HALOGENATED",
+    "ORGANIC",
+    "TOXIC",
+    "CORROSIVE",
+    "GUANIDINE",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No bleach. No acids.",
+   "why": "Phenol, chloroform and guanidinium thiocyanate.",
+   "confidence": "High"
+  },
+  {
+   "id": "I038",
+   "name": "TRIzol / TRI Reagent aqueous phase and lysate waste",
+   "aliases": [
+    "TRIzol lysate",
+    "RNA aqueous phase"
+   ],
+   "category_id": "CHEM-GUA",
+   "steps": "Fume cupboard.",
+   "flags": [
+    "PHENOL",
+    "GUANIDINE",
+    "TOXIC",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No bleach (toxic gas). No acids.",
+   "why": "Contains guanidinium and residual phenol.",
+   "confidence": "High"
+  },
+  {
+   "id": "I039",
+   "name": "Column-kit flow-through and buffers with guanidinium (lysis / binding)",
+   "aliases": [
+    "RLT",
+    "buffer RLT",
+    "RW1",
+    "binding buffer",
+    "Qiagen flow-through",
+    "miniprep"
+   ],
+   "category_id": "CHEM-GUA",
+   "steps": "Check the kit safety sheet for guanidinium buffers.",
+   "flags": [
+    "GUANIDINE",
+    "TOXIC",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No bleach (toxic gas). No acids.",
+   "why": "Guanidinium salts react with bleach.",
+   "confidence": "High"
+  },
+  {
+   "id": "I040",
+   "name": "Spin columns, collection tubes and tips from extraction kits",
+   "aliases": [
+    "spin column",
+    "collection tube"
+   ],
+   "category_id": "CHEM-SOL",
+   "steps": "",
+   "flags": [],
+   "do_not": "Do not autoclave.",
+   "why": "Guanidinium residue.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I041",
+   "name": "Ethanol / isopropanol waste (precipitation, washes)",
+   "aliases": [
+    "ethanol",
+    "IPA",
+    "isopropanol",
+    "70% ethanol",
+    "80% ethanol"
+   ],
+   "category_id": "CHEM-NH",
+   "steps": "",
+   "flags": [
+    "FLAMMABLE",
+    "ORGANIC",
+    "NONHAL",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No bleach or oxidisers.",
+   "why": "Flammable solvent.",
+   "confidence": "High"
+  },
+  {
+   "id": "I042",
+   "name": "Chloroform (waste)",
+   "aliases": [
+    "chloroform",
+    "CHCl3"
+   ],
+   "category_id": "CHEM-HAL",
+   "steps": "Fume cupboard.",
+   "flags": [
+    "HALOGENATED",
+    "ORGANIC",
+    "TOXIC",
+    "CARCINOGEN",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "",
+   "why": "Halogenated solvent.",
+   "confidence": "High"
+  },
+  {
+   "id": "I043",
+   "name": "Phenol / buffer-saturated phenol (waste)",
+   "aliases": [
+    "phenol",
+    "saturated phenol"
+   ],
+   "category_id": "CHEM-HAL",
+   "steps": "Fume cupboard.",
+   "flags": [
+    "PHENOL",
+    "ORGANIC",
+    "TOXIC",
+    "CORROSIVE",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No bleach.",
+   "why": "Toxic and corrosive; many sites collect separately.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I044",
+   "name": "Urea / ammonium bicarbonate digestion buffers",
+   "aliases": [
+    "urea",
+    "ammonium bicarbonate",
+    "ABC",
+    "digestion buffer",
+    "trypsin digest"
+   ],
+   "category_id": "CHEM-AQ",
+   "steps": "",
+   "flags": [
+    "AMMONIA",
+    "NO_DRAIN"
+   ],
+   "do_not": "No bleach (chloramines).",
+   "why": "Ammonium and urea react with hypochlorite.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I045",
+   "name": "Iodoacetamide / DTT / TCEP reduction-alkylation waste",
+   "aliases": [
+    "IAA",
+    "iodoacetamide",
+    "DTT",
+    "TCEP",
+    "alkylation"
+   ],
+   "category_id": "CHEM-AQ",
+   "steps": "Protect from light while collecting.",
+   "flags": [
+    "TOXIC",
+    "NO_DRAIN"
+   ],
+   "do_not": "",
+   "why": "Toxic sensitiser.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I046",
+   "name": "Acetonitrile / water LC-MS waste (with formic acid or TFA)",
+   "aliases": [
+    "acetonitrile",
+    "ACN",
+    "LC-MS waste",
+    "buffer B",
+    "formic acid 0.1%"
+   ],
+   "category_id": "CHEM-NH",
+   "steps": "If TFA is present, check whether your site treats it as halogenated.",
+   "flags": [
+    "FLAMMABLE",
+    "ORGANIC",
+    "NONHAL",
+    "ACID",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No bleach or oxidisers.",
+   "why": "Flammable organic mobile phase.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I047",
+   "name": "Trifluoroacetic acid / neat formic acid",
+   "aliases": [
+    "TFA",
+    "formic acid",
+    "FA"
+   ],
+   "category_id": "CHEM-ACID",
+   "steps": "Fume cupboard; compatible container.",
+   "flags": [
+    "CORROSIVE",
+    "ACID",
+    "TOXIC",
+    "NO_DRAIN"
+   ],
+   "do_not": "No bleach. No azide.",
+   "why": "Corrosive acid.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I048",
+   "name": "C18 StageTips, desalting tips / columns, SP3 bead tubes",
+   "aliases": [
+    "stage tip",
+    "C18",
+    "SP3",
+    "desalting"
+   ],
+   "category_id": "CHEM-SOL",
+   "steps": "",
+   "flags": [],
+   "do_not": "",
+   "why": "Solvent residue.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I049",
+   "name": "LC-MS autosampler vials (glass, solvent residue)",
+   "aliases": [
+    "autosampler vial",
+    "HPLC vial"
+   ],
+   "category_id": "CHEM-SOL",
+   "steps": "Cap on; rigid container.",
+   "flags": [
+    "SHARP",
+    "ORGANIC"
+   ],
+   "do_not": "Not the clean-glass box.",
+   "why": "Contaminated glass.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I050",
+   "name": "Cell-surface biotinylation reagents and quench",
+   "aliases": [
+    "sulfo-NHS-biotin",
+    "biotinylation",
+    "glycine quench"
+   ],
+   "category_id": "CHEM-AQ",
+   "steps": "",
+   "flags": [
+    "NO_DRAIN"
+   ],
+   "do_not": "",
+   "why": "Reactive reagent with biological origin; collect conservatively.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I051",
+   "name": "Streptavidin / magnetic beads after pull-down",
+   "aliases": [
+    "streptavidin beads",
+    "magnetic beads",
+    "pulldown"
+   ],
+   "category_id": "CHEM-SOL",
+   "steps": "",
+   "flags": [],
+   "do_not": "",
+   "why": "Lysate and chemical residue; policy varies.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I052",
+   "name": "Peptide digests / leftover protein samples",
+   "aliases": [
+    "peptides",
+    "digest",
+    "protein sample"
+   ],
+   "category_id": "CHEM-AQ",
+   "steps": "",
+   "flags": [
+    "NO_DRAIN"
+   ],
+   "do_not": "",
+   "why": "Chemical and biological residue.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I053",
+   "name": "MTT reagent and solubilised formazan (DMSO or acidified isopropanol)",
+   "aliases": [
+    "MTT",
+    "formazan",
+    "DMSO"
+   ],
+   "category_id": "CHEM-NH",
+   "steps": "",
+   "flags": [
+    "ORGANIC",
+    "NONHAL",
+    "FLAMMABLE",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No bleach.",
+   "why": "Organic solvent with a dye.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I054",
+   "name": "96-well plates after MTT solubilisation",
+   "aliases": [
+    "MTT plate",
+    "viability plate"
+   ],
+   "category_id": "CHEM-SOL",
+   "steps": "Solvent residue: do not autoclave.",
+   "flags": [
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "Do not autoclave.",
+   "why": "Solvent residue.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I055",
+   "name": "Assay plates (CellTiter-Glo, resazurin) with lysed or live cells",
+   "aliases": [
+    "CellTiter-Glo",
+    "alamar blue",
+    "resazurin",
+    "luminescence plate"
+   ],
+   "category_id": "BIO-AUT",
+   "steps": "",
+   "flags": [
+    "BIOHAZARD"
+   ],
+   "do_not": "Not if cells were drug-treated with cytotoxics.",
+   "why": "Biological material.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I056",
+   "name": "Trypan blue solution",
+   "aliases": [
+    "trypan blue"
+   ],
+   "category_id": "CMR-LIQ",
+   "steps": "",
+   "flags": [
+    "CARCINOGEN",
+    "NO_DRAIN"
+   ],
+   "do_not": "",
+   "why": "Carries a carcinogen classification in some jurisdictions; check the SDS.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I057",
+   "name": "Cell counting slides / coverslips with trypan blue",
+   "aliases": [
+    "hemocytometer",
+    "counting slide"
+   ],
+   "category_id": "CMR-SOL",
+   "steps": "",
+   "flags": [
+    "CARCINOGEN"
+   ],
+   "do_not": "",
+   "why": "As for trypan blue.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I058",
+   "name": "Formaldehyde / formalin / 4% PFA solutions",
+   "aliases": [
+    "formaldehyde",
+    "PFA",
+    "paraformaldehyde",
+    "formalin"
+   ],
+   "category_id": "CMR-LIQ",
+   "steps": "Fume cupboard.",
+   "flags": [
+    "FORMALDEHYDE",
+    "CARCINOGEN",
+    "TOXIC",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "Never mix with bleach.",
+   "why": "Carcinogen.",
+   "confidence": "High"
+  },
+  {
+   "id": "I059",
+   "name": "Xylene / xylene substitutes",
+   "aliases": [
+    "xylene",
+    "histoclear"
+   ],
+   "category_id": "CHEM-NH",
+   "steps": "Fume cupboard.",
+   "flags": [
+    "FLAMMABLE",
+    "ORGANIC",
+    "NONHAL",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No bleach or oxidisers.",
+   "why": "Flammable solvent.",
+   "confidence": "High"
+  },
+  {
+   "id": "I060",
+   "name": "DAB (diaminobenzidine) solutions and DAB-stained consumables",
+   "aliases": [
+    "DAB",
+    "diaminobenzidine",
+    "IHC chromogen"
+   ],
+   "category_id": "CMR-LIQ",
+   "steps": "Some sites inactivate per SOP before collection.",
+   "flags": [
+    "CARCINOGEN",
+    "NO_DRAIN"
+   ],
+   "do_not": "",
+   "why": "Suspected carcinogen.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I061",
+   "name": "Stained slides and coverslips (fixed tissue / cells, mounting medium)",
+   "aliases": [
+    "IHC slide",
+    "IF slide",
+    "mounted slide"
+   ],
+   "category_id": "SHP-CHEM",
+   "steps": "",
+   "flags": [
+    "SHARP"
+   ],
+   "do_not": "",
+   "why": "Glass with chemical residue.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I062",
+   "name": "Mounting medium (with or without DAPI) residues and tips",
+   "aliases": [
+    "DAPI",
+    "Vectashield",
+    "ProLong"
+   ],
+   "category_id": "CHEM-SOL",
+   "steps": "",
+   "flags": [],
+   "do_not": "",
+   "why": "Chemical residue.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I063",
+   "name": "Antibody solutions in PBS (azide-free), blocking buffers",
+   "aliases": [
+    "primary antibody",
+    "secondary antibody",
+    "BSA",
+    "blocking"
+   ],
+   "category_id": "DRAIN",
+   "steps": "Only if azide-free.",
+   "flags": [],
+   "do_not": "If azide is present use the azide item.",
+   "why": "Low hazard when azide-free.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I064",
+   "name": "Strong acids (HCl, H2SO4, HNO3)",
+   "aliases": [
+    "hydrochloric acid",
+    "sulfuric acid",
+    "nitric acid"
+   ],
+   "category_id": "CHEM-ACID",
+   "steps": "Fume cupboard.",
+   "flags": [
+    "CORROSIVE",
+    "ACID",
+    "NO_DRAIN"
+   ],
+   "do_not": "No bleach, azide, cyanide or organics.",
+   "why": "Corrosive.",
+   "confidence": "High"
+  },
+  {
+   "id": "I065",
+   "name": "Strong alkali (NaOH / KOH, roughly pH 11 and above)",
+   "aliases": [
+    "sodium hydroxide",
+    "potassium hydroxide"
+   ],
+   "category_id": "CHEM-BASE",
+   "steps": "",
+   "flags": [
+    "CORROSIVE",
+    "BASE",
+    "NO_DRAIN"
+   ],
+   "do_not": "No acids.",
+   "why": "Corrosive.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I066",
+   "name": "Used bleach / hypochlorite decontamination solution",
+   "aliases": [
+    "bleach",
+    "hypochlorite",
+    "Chlorclean"
+   ],
+   "category_id": "DRAIN",
+   "steps": "Flush with plenty of water.",
+   "flags": [
+    "BLEACH",
+    "OXIDISER",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "Never combine with acids, ammonia/ammonium, guanidinium, formaldehyde or solvents. Never autoclave.",
+   "why": "Oxidiser; releases toxic gas with many lab chemicals.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I067",
+   "name": "Radiolabelled material (32P, 3H, 125I, etc.)",
+   "aliases": [
+    "radioactive",
+    "isotope",
+    "radiolabel"
+   ],
+   "category_id": "RAD",
+   "steps": "Escalate to the Radiation Protection Supervisor.",
+   "flags": [
+    "RADIOACTIVE",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "Do not classify in this tool.",
+   "why": "Out of scope.",
+   "confidence": "High"
+  },
+  {
+   "id": "I068",
+   "name": "Unlabelled / unidentified liquid or container",
+   "aliases": [
+    "unknown",
+    "no label",
+    "mystery bottle"
+   ],
+   "category_id": "UNK",
+   "steps": "Label as unknown and quarantine.",
+   "flags": [
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "",
+   "why": "Cannot classify safely.",
+   "confidence": "High"
+  },
+  {
+   "id": "I069",
+   "name": "Acetic anhydride (waste or surplus)",
+   "aliases": [
+    "acetic anhydride",
+    "Ac2O",
+    "acetylation reagent"
+   ],
+   "category_id": "REACT",
+   "steps": "Own labelled container with vented cap; fume cupboard; quench only under an approved SOP.",
+   "flags": [
+    "FLAMMABLE",
+    "CORROSIVE",
+    "ORGANIC",
+    "WATER_REACTIVE",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "Not in the solvent carboy, aqueous waste or the drain. Keep from alcohols, amines, bases and oxidisers. Check site record-keeping rules for controlled drug precursors.",
+   "why": "Reacts exothermically with water and alcohols.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I070",
+   "name": "Peroxide-forming solvents past date (diethyl ether, THF, dioxane)",
+   "aliases": [
+    "ether",
+    "THF",
+    "tetrahydrofuran",
+    "dioxane",
+    "old solvent"
+   ],
+   "category_id": "REACT",
+   "steps": "Do not open if crystals are visible or the container is old; call the safety officer.",
+   "flags": [
+    "FLAMMABLE",
+    "ORGANIC",
+    "PEROXIDE_FORMER",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "Do not pour into the solvent carboy.",
+   "why": "Peroxides can detonate on friction or heat.",
+   "confidence": "High"
+  },
+  {
+   "id": "I071",
+   "name": "Picric acid (dry or old)",
+   "aliases": [
+    "picric acid",
+    "trinitrophenol"
+   ],
+   "category_id": "REACT",
+   "steps": "Do not move or open; call the safety officer.",
+   "flags": [
+    "EXPLOSIVE",
+    "TOXIC",
+    "ACID",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "Never let it dry out; never touch a crusted lid.",
+   "why": "Dry picric acid is shock-sensitive.",
+   "confidence": "High"
+  },
+  {
+   "id": "I072",
+   "name": "Sodium azide powder or solids",
+   "aliases": [
+    "sodium azide powder",
+    "azide stock"
+   ],
+   "category_id": "REACT",
+   "steps": "Own container; keep dry and away from acids and metals.",
+   "flags": [
+    "AZIDE",
+    "TOXIC",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No acids. No metal containers or drains.",
+   "why": "Toxic; forms explosive azides with metals.",
+   "confidence": "High"
+  },
+  {
+   "id": "I073",
+   "name": "Needles, syringes and glass used with cytotoxic drugs",
+   "aliases": [
+    "cytotoxic needle",
+    "chemo sharps"
+   ],
+   "category_id": "SHP-CYT",
+   "steps": "Purple-lidded sharps bin; fill to the line only.",
+   "flags": [
+    "SHARP",
+    "CYTOTOXIC",
+    "TOXIC"
+   ],
+   "do_not": "Never in orange or yellow sharps bins.",
+   "why": "Cytotoxic contamination.",
+   "confidence": "High"
+  },
+  {
+   "id": "I074",
+   "name": "Expired or unused non-cytotoxic medicines (including veterinary)",
+   "aliases": [
+    "expired drug",
+    "medicine",
+    "antibiotic tablets"
+   ],
+   "category_id": "PHARM",
+   "steps": "Keep in original packaging.",
+   "flags": [
+    "NO_DRAIN"
+   ],
+   "do_not": "Never drain. Controlled drugs: escalate.",
+   "why": "Pharmaceutical stream.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I075",
+   "name": "Solutions or solids with heavy metals (Hg, Cd, Pb, Cr(VI))",
+   "aliases": [
+    "mercury",
+    "cadmium",
+    "lead",
+    "chromate",
+    "dichromate"
+   ],
+   "category_id": "METAL",
+   "steps": "Own container.",
+   "flags": [
+    "TOXIC",
+    "HEAVY_METAL",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "Never drain. Keep apart from azide.",
+   "why": "Persistent toxic metals.",
+   "confidence": "High"
+  },
+  {
+   "id": "I076",
+   "name": "Silver stain solutions (silver nitrate) from gel staining",
+   "aliases": [
+    "silver stain",
+    "silver nitrate",
+    "silver staining gel"
+   ],
+   "category_id": "METAL",
+   "steps": "Collect all silver steps; do not drain.",
+   "flags": [
+    "TOXIC",
+    "OXIDISER",
+    "HEAVY_METAL",
+    "NO_DRAIN",
+    "NO_AUTOCLAVE"
+   ],
+   "do_not": "No organics or solvents. Never drain.",
+   "why": "Silver is a toxic metal and silver nitrate is an oxidiser.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I077",
+   "name": "Surplus or unwanted reagents in original containers",
+   "aliases": [
+    "old reagent",
+    "surplus chemical",
+    "unwanted bottle"
+   ],
+   "category_id": "LABPACK",
+   "steps": "Keep original container and label; list on the lab-pack inventory.",
+   "flags": [
+    "NO_DRAIN"
+   ],
+   "do_not": "Do not decant or combine.",
+   "why": "Unknown mixtures are riskier than labelled originals.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I078",
+   "name": "Polystyrene boxes, clean cool packs and supplier packaging",
+   "aliases": [
+    "polystyrene",
+    "ice pack",
+    "cool pack",
+    "cold chain box"
+   ],
+   "category_id": "TAKEBACK",
+   "steps": "Clean and dry; return where the supplier offers take-back.",
+   "flags": [],
+   "do_not": "Not if contaminated.",
+   "why": "Supplier schemes exist for some items.",
+   "confidence": "Verify locally"
+  },
+  {
+   "id": "I079",
+   "name": "Unopened in-date surplus reagents and consumables",
+   "aliases": [
+    "surplus reagent",
+    "spare kit",
+    "unopened"
+   ],
+   "category_id": "REUSE",
+   "steps": "Offer to other labs first.",
+   "flags": [],
+   "do_not": "Not if opened, expired or unlabelled.",
+   "why": "Avoids waste and cost.",
+   "confidence": "Medium"
+  },
+  {
+   "id": "I080",
+   "name": "Old electronic equipment (plate readers, power supplies)",
+   "aliases": [
+    "old equipment",
+    "electronics",
+    "instrument"
+   ],
+   "category_id": "WEEE",
+   "steps": "Decontaminate and tag as safe.",
+   "flags": [],
+   "do_not": "Not with general waste.",
+   "why": "Regulated electronic waste.",
+   "confidence": "High"
+  },
+  {
+   "id": "I081",
+   "name": "Batteries (instrument, pipette controllers)",
+   "aliases": [
+    "battery",
+    "lithium",
+    "AA"
+   ],
+   "category_id": "BATT",
+   "steps": "Tape the terminals of lithium cells.",
+   "flags": [],
+   "do_not": "Not in general waste.",
+   "why": "Regulated and a fire risk.",
+   "confidence": "High"
+  },
+  {
+   "id": "I082",
+   "name": "UV bulbs, fluorescent tubes, transilluminator lamps",
+   "aliases": [
+    "UV lamp",
+    "bulb",
+    "tube"
+   ],
+   "category_id": "LAMP",
+   "steps": "Handle carefully.",
+   "flags": [
+    "TOXIC"
+   ],
+   "do_not": "Not in general waste or glass.",
+   "why": "Often contains mercury.",
+   "confidence": "High"
+  },
+  {
+   "id": "I083",
+   "name": "Gas cylinders (empty or unwanted)",
+   "aliases": [
+    "CO2 cylinder",
+    "nitrogen cylinder",
+    "argon",
+    "gas bottle"
+   ],
+   "category_id": "CYL",
+   "steps": "Close valve, cap, label empty or full.",
+   "flags": [
+    "PRESSURISED"
+   ],
+   "do_not": "Never dispose of locally.",
+   "why": "Return to supplier.",
+   "confidence": "High"
+  },
+  {
+   "id": "I084",
+   "name": "Animal carcasses, bedding and in-vivo waste",
+   "aliases": [
+    "carcass",
+    "bedding",
+    "mouse waste"
+   ],
+   "category_id": "ANI",
+   "steps": "Escalate to the animal facility.",
+   "flags": [
+    "BIOHAZARD"
+   ],
+   "do_not": "Do not classify in this tool.",
+   "why": "Out of scope.",
+   "confidence": "High"
+  },
+  {
+   "id": "I085",
+   "name": "Pathogens above containment level 2",
+   "aliases": [
+    "CL3",
+    "BSL3",
+    "high containment",
+    "unknown pathogen"
+   ],
+   "category_id": "HICON",
+   "steps": "Escalate to the containment facility.",
+   "flags": [
+    "BIOHAZARD"
+   ],
+   "do_not": "Do not classify in this tool.",
+   "why": "Out of scope.",
+   "confidence": "High"
+  }
+ ],
+ "incompatibilities": [
+  {
+   "id": "R01",
+   "a": "BLEACH",
+   "b": "ACID",
+   "hazard": "Releases chlorine gas",
+   "rule": "Block: never place in the same container or treat together.",
+   "severity": "Critical"
+  },
+  {
+   "id": "R02",
+   "a": "BLEACH",
+   "b": "AMMONIA",
+   "hazard": "Forms toxic chloramine vapours (includes ammonium salts and urea)",
+   "rule": "Block.",
+   "severity": "Critical"
+  },
+  {
+   "id": "R03",
+   "a": "BLEACH",
+   "b": "GUANIDINE",
+   "hazard": "Releases toxic gases when guanidinium salts meet hypochlorite",
+   "rule": "Block. Do not use bleach on lysis-buffer waste.",
+   "severity": "Critical"
+  },
+  {
+   "id": "R04",
+   "a": "BLEACH",
+   "b": "FORMALDEHYDE",
+   "hazard": "Hazardous chlorinated by-products",
+   "rule": "Block.",
+   "severity": "High"
+  },
+  {
+   "id": "R05",
+   "a": "BLEACH",
+   "b": "ORGANIC",
+   "hazard": "Reactive and toxic chlorinated by-products (e.g. with acetone or alcohols)",
+   "rule": "Block. Do not add bleach to solvent-containing waste.",
+   "severity": "High"
+  },
+  {
+   "id": "R06",
+   "a": "AZIDE",
+   "b": "ACID",
+   "hazard": "Forms hydrazoic acid, a toxic and explosive gas",
+   "rule": "Block.",
+   "severity": "Critical"
+  },
+  {
+   "id": "R07",
+   "a": "OXIDISER",
+   "b": "ORGANIC",
+   "hazard": "Fire or explosion risk",
+   "rule": "Block.",
+   "severity": "Critical"
+  },
+  {
+   "id": "R08",
+   "a": "ACID",
+   "b": "BASE",
+   "hazard": "Violent exothermic reaction",
+   "rule": "Block unless a neutralisation SOP applies.",
+   "severity": "High"
+  },
+  {
+   "id": "R09",
+   "a": "HALOGENATED",
+   "b": "NONHAL",
+   "hazard": "Different disposal routes; mixing raises cost and risk",
+   "rule": "Warn: keep in separate carboys.",
+   "severity": "Segregation"
+  },
+  {
+   "id": "R10",
+   "a": "CYTOTOXIC",
+   "b": "ANY",
+   "hazard": "Cytotoxic waste must stay in its own stream",
+   "rule": "Block mixing with anything.",
+   "severity": "Segregation"
+  },
+  {
+   "id": "R11",
+   "a": "CMR",
+   "b": "ANY",
+   "hazard": "CMR agents must not enter general chemical, biological or drain streams",
+   "rule": "Block mixing with anything outside CMR streams.",
+   "severity": "Segregation"
+  },
+  {
+   "id": "R12",
+   "a": "WATER_REACTIVE",
+   "b": "ANY",
+   "hazard": "Reacts violently or exothermically with water, alcohols and many other wastes",
+   "rule": "Block mixing with anything; own container.",
+   "severity": "Critical"
+  },
+  {
+   "id": "R13",
+   "a": "PEROXIDE_FORMER",
+   "b": "ANY",
+   "hazard": "Peroxides can detonate on contact with other waste or when disturbed",
+   "rule": "Block mixing; escalate to the safety officer.",
+   "severity": "Critical"
+  },
+  {
+   "id": "R14",
+   "a": "AZIDE",
+   "b": "HEAVY_METAL",
+   "hazard": "Forms shock-sensitive heavy-metal azides",
+   "rule": "Block.",
+   "severity": "Critical"
+  },
+  {
+   "id": "R15",
+   "a": "EXPLOSIVE",
+   "b": "ANY",
+   "hazard": "Shock-sensitive material",
+   "rule": "Block handling and mixing; escalate.",
+   "severity": "Critical"
+  }
+ ],
+ "workflows": {
+  "Western blot / SDS-PAGE": [
+   {
+    "stage": "Sample prep",
+    "item_id": "I030"
+   },
+   {
+    "stage": "Sample prep",
+    "item_id": "I010"
+   },
+   {
+    "stage": "Sample prep",
+    "item_id": "I011"
+   },
+   {
+    "stage": "Gel casting",
+    "item_id": "I022"
+   },
+   {
+    "stage": "Electrophoresis",
+    "item_id": "I021"
+   },
+   {
+    "stage": "Electrophoresis",
+    "item_id": "I023"
+   },
+   {
+    "stage": "Transfer",
+    "item_id": "I024"
+   },
+   {
+    "stage": "Blocking and washes",
+    "item_id": "I025"
+   },
+   {
+    "stage": "Antibody incubation",
+    "item_id": "I026"
+   },
+   {
+    "stage": "Detection",
+    "item_id": "I028"
+   },
+   {
+    "stage": "Detection",
+    "item_id": "I027"
+   },
+   {
+    "stage": "Staining",
+    "item_id": "I029"
+   }
+  ],
+  "Agarose gel electrophoresis": [
+   {
+    "stage": "Gel casting and running",
+    "item_id": "I031"
+   },
+   {
+    "stage": "Gel casting and running",
+    "item_id": "I032"
+   },
+   {
+    "stage": "Gel casting and running",
+    "item_id": "I033"
+   },
+   {
+    "stage": "Gel casting and running",
+    "item_id": "I034"
+   },
+   {
+    "stage": "Gel casting and running",
+    "item_id": "I035"
+   },
+   {
+    "stage": "Band excision",
+    "item_id": "I020"
+   }
+  ],
+  "Mammalian cell culture (routine)": [
+   {
+    "stage": "Feeding and passaging",
+    "item_id": "I013"
+   },
+   {
+    "stage": "Feeding and passaging",
+    "item_id": "I008"
+   },
+   {
+    "stage": "Feeding and passaging",
+    "item_id": "I009"
+   },
+   {
+    "stage": "Feeding and passaging",
+    "item_id": "I010"
+   },
+   {
+    "stage": "Counting",
+    "item_id": "I056"
+   },
+   {
+    "stage": "Counting",
+    "item_id": "I057"
+   },
+   {
+    "stage": "Freezing",
+    "item_id": "I012"
+   },
+   {
+    "stage": "Housekeeping",
+    "item_id": "I003"
+   },
+   {
+    "stage": "Housekeeping",
+    "item_id": "I066"
+   },
+   {
+    "stage": "Housekeeping",
+    "item_id": "I011"
+   }
+  ],
+  "Transfection / transduction": [
+   {
+    "stage": "Experiment",
+    "item_id": "I014"
+   },
+   {
+    "stage": "Experiment",
+    "item_id": "I010"
+   },
+   {
+    "stage": "Housekeeping",
+    "item_id": "I066"
+   }
+  ],
+  "Cell viability (MTT / luminescence)": [
+   {
+    "stage": "Drug treatment",
+    "item_id": "I015"
+   },
+   {
+    "stage": "Readout",
+    "item_id": "I053"
+   },
+   {
+    "stage": "Readout",
+    "item_id": "I054"
+   },
+   {
+    "stage": "Readout",
+    "item_id": "I055"
+   },
+   {
+    "stage": "Pipetting",
+    "item_id": "I010"
+   }
+  ],
+  "PCR / qPCR": [
+   {
+    "stage": "Setup",
+    "item_id": "I036"
+   },
+   {
+    "stage": "Setup",
+    "item_id": "I010"
+   },
+   {
+    "stage": "Setup",
+    "item_id": "I011"
+   }
+  ],
+  "RNA / DNA extraction (TRIzol and kits)": [
+   {
+    "stage": "Lysis",
+    "item_id": "I038"
+   },
+   {
+    "stage": "Phase separation",
+    "item_id": "I037"
+   },
+   {
+    "stage": "Phase separation",
+    "item_id": "I042"
+   },
+   {
+    "stage": "Kit binding and washes",
+    "item_id": "I039"
+   },
+   {
+    "stage": "Kit binding and washes",
+    "item_id": "I040"
+   },
+   {
+    "stage": "Precipitation",
+    "item_id": "I041"
+   },
+   {
+    "stage": "Cleanup",
+    "item_id": "I043"
+   }
+  ],
+  "IHC / immunofluorescence": [
+   {
+    "stage": "Fixation",
+    "item_id": "I058"
+   },
+   {
+    "stage": "Tissue handling",
+    "item_id": "I016"
+   },
+   {
+    "stage": "Deparaffinisation",
+    "item_id": "I059"
+   },
+   {
+    "stage": "Dehydration",
+    "item_id": "I041"
+   },
+   {
+    "stage": "Staining",
+    "item_id": "I063"
+   },
+   {
+    "stage": "Staining",
+    "item_id": "I060"
+   },
+   {
+    "stage": "Mounting",
+    "item_id": "I062"
+   },
+   {
+    "stage": "Mounting",
+    "item_id": "I061"
+   }
+  ],
+  "LC-MS/MS proteomics sample prep": [
+   {
+    "stage": "Lysis and digestion",
+    "item_id": "I044"
+   },
+   {
+    "stage": "Reduction and alkylation",
+    "item_id": "I045"
+   },
+   {
+    "stage": "Enrichment",
+    "item_id": "I050"
+   },
+   {
+    "stage": "Enrichment",
+    "item_id": "I051"
+   },
+   {
+    "stage": "Cleanup",
+    "item_id": "I048"
+   },
+   {
+    "stage": "Acidification",
+    "item_id": "I047"
+   },
+   {
+    "stage": "Leftovers",
+    "item_id": "I052"
+   },
+   {
+    "stage": "Run",
+    "item_id": "I046"
+   },
+   {
+    "stage": "Run",
+    "item_id": "I049"
+   },
+   {
+    "stage": "Gel staining",
+    "item_id": "I076"
+   },
+   {
+    "stage": "Derivatisation (e.g. acetylation)",
+    "item_id": "I069"
+   }
+  ]
+ }
+}
