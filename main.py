@@ -43,10 +43,11 @@ def bins():
 
 
 @app.post("/api/classify")
-async def classify(image: UploadFile = File(...), bins: str = Form("[]")):
-    data = await image.read()
-    if not data:
-        raise HTTPException(400, "Empty image")
+async def classify(image: UploadFile | None = File(None), bins: str = Form("[]"), description: str = Form("")):
+    data = await image.read() if image else b""
+    description = description.strip()[:300]
+    if not data and not description:
+        raise HTTPException(400, "Add a photo or a description first")
     try:
         selection = json.loads(bins)
     except json.JSONDecodeError:
@@ -55,10 +56,11 @@ async def classify(image: UploadFile = File(...), bins: str = Form("[]")):
     if not chosen:
         raise HTTPException(400, "Select at least one bin first")
     try:
-        result = classify_image(data, image.content_type or "image/jpeg", chosen)
+        mime = (image.content_type if image else None) or "image/jpeg"
+        result = classify_image(data or None, mime, chosen, description)
     except Exception as e:
         raise HTTPException(502, f"Gemini error: {e}")
-    result["image_hash"] = hashlib.sha256(data).hexdigest()
+    result["image_hash"] = hashlib.sha256(data or description.encode()).hexdigest()
     return result
 
 

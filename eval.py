@@ -10,7 +10,8 @@
 
    OR make a list (Excel, CSV or tab-separated) with columns
        Photo | Bin_Classification | Gemini_Classification | Eval_Correct
-   fill in Photo (e.g. photo_1) and Bin_Classification (e.g. Hydrocarbon), and run
+   fill in Photo (e.g. photo_1) and Bin_Classification (e.g. Hydrocarbon), optionally a
+   Description column (what a student would type, e.g. "lead nitrate solution"), and run
        python eval.py --list data/photo_list.xlsx      (photos are read from data/photos/)
    It writes photo_list_results.xlsx with the last two columns filled in.
 
@@ -27,6 +28,7 @@
 """
 import argparse
 import csv
+import hashlib
 import html
 import json
 import re
@@ -92,29 +94,74 @@ def collect(folder: Path) -> list[tuple[Path, str]]:
     return photos
 
 
-def run(photos, bins, sleep, fresh) -> list[dict]:
-    cache = {} if fresh or not CACHE_PATH.exists() else json.loads(CACHE_PATH.read_text())
-    rows, failed = [], []
+def _sha(b: bytes) -> str:
+    return hashlib.sha1(b).hexdigest()[:16]
+
+
+def logic_version(bins) -> str:
+    """Changes only when the classification logic really changes (not when files are merely copied)."""
+    parts = [Path(f).read_bytes() for f in ("classify.py", "taxonomy.json") if Path(f).exists()]
+    return _sha(b"".join(parts) + ",".join(b["id"] for b in bins).encode())
+
+
+def load_cache() -> dict:
+    try:
+        c = json.loads(CACHE_PATH.read_text())
+        if isinstance(c, dict) and "exact" in c and "latest" in c:
+            return c
+    except Exception:
+        pass
+    return {"exact": {}, "latest": {}}
+
+
+def run(photos, bins, sleep, fresh, plan=None, descs=None) -> list[dict]:
+    """plan(path) -> "force" (always call Gemini), "run" (call unless cached for this logic version)
+    or "reuse" (never call; use any earlier result for this photo, else skip). Default: "run"."""
+    cache = load_cache()
+    logic = logic_version(bins)
+    rows, failed, calls, reused, skipped = [], [], 0, 0, 0
     for i, (path, truth) in enumerate(photos, 1):
-        tax = sum(Path(f).stat().st_mtime for f in ("taxonomy.json", "classify.py") if Path(f).exists())
-        key = f"{path}|{path.stat().st_mtime}|{tax}|{','.join(b['id'] for b in bins)}"
-        if key in cache:
-            r = cache[key]
+        data = path.read_bytes()
+        desc = (descs or {}).get(str(path), "")
+        ph = _sha(data) + (f"+{_sha(desc.encode())}" if desc else "")
+        key = f"{ph}|{logic}"
+        mode = "force" if fresh else (plan(path) if plan else "run")
+        r = None
+        if mode != "force" and key in cache["exact"]:
+            r = cache["exact"][key]
+        elif mode == "reuse":
+            r = cache["latest"].get(ph)
+            if r is None:
+                skipped += 1
+                continue
+            reused += 1
         else:
             try:
                 out = None
                 for attempt in range(5):
                     try:
-                        out = classify_image(path.read_bytes(), MIME[path.suffix.lower()], bins)
+                        out = classify_image(data, MIME[path.suffix.lower()], bins, desc)
                         break
                     except Exception as e:
                         msg = str(e)
+                        low = msg.lower()
+                        if any(k in low for k in ("billing", "prepay", "credit", "payment")):
+                            print(f"\n⛔ Gemini refused because of billing/credits, so stopping:\n   {msg[:300]}\n"
+                                  "   Fix: add credit to the project, or use an API key from a project without billing.")
+                            raise SystemExit(1)
+                        if attempt == 0:
+                            print(f"  Gemini said: {msg[:300]}")
+                        if "PerDay" in msg or "per day" in low:
+                            print(f"\n⛔ Gemini's DAILY quota is used up, so stopping. Results so far are saved;"
+                                  f" re-run later (or with a new key or model) and it carries on from here.")
+                            raise SystemExit(1)
                         if attempt < 4 and any(k in msg for k in ("429", "RESOURCE_EXHAUSTED", "503", "UNAVAILABLE", "overloaded")):
                             wait = 20 * (attempt + 1)
                             print(f"  [{i}/{len(photos)}] {path.name}: Gemini busy / rate-limited, waiting {wait}s and retrying…")
                             time.sleep(wait)
                             continue
                         raise
+                calls += 1
                 r = {
                     "pred": NOT_WASTE if out.get("not_waste") else out["category"]["id"] if out["category"] else NONE,
                     "confidence": round(out["confidence"], 2),
@@ -131,18 +178,51 @@ def run(photos, bins, sleep, fresh) -> list[dict]:
                 print(f"  [{i}/{len(photos)}] {path.name}: ERROR {e}")
                 failed.append(path.name)
                 continue
-            cache[key] = r
+            cache["exact"][key] = r
+            cache["latest"][ph] = r
             CACHE_PATH.write_text(json.dumps(cache, indent=1))
             time.sleep(sleep)
-        r = {**r, "file": str(path), "name": path.name, "truth": truth}
+        r = {**r, "file": str(path), "name": path.name, "truth": truth, "user_description": desc}
         mark = "✓" if is_ok(r) else "✗"
         via = f"policy {r['matched_item']}" if r.get("decided_by") == "policy" else "AI"
         print(f"  [{i}/{len(photos)}] {mark} {path.name}: {short(truth)} → {short(r['pred'])} ({r['confidence']:.0%}, {via})")
         rows.append(r)
+    print(f"\nGemini calls this run: {calls}"
+          + (f" · reused earlier results: {reused}" if reused else "")
+          + (f" · not tested yet: {skipped}" if skipped else ""))
     if failed:
-        print(f"\n⚠️  {len(failed)} photos failed and are NOT in the results: {', '.join(failed[:10])}{' …' if len(failed) > 10 else ''}")
+        print(f"⚠️  {len(failed)} photos failed and are NOT in the results: {', '.join(failed[:10])}{' …' if len(failed) > 10 else ''}")
         print("   Run the same command again (without --fresh) to retry just those.")
     return rows
+
+
+def parse_only(spec: str):
+    """'1-11,15,photo_20' -> a function telling whether a photo file is selected."""
+    nums, names = set(), set()
+    for part in spec.split(","):
+        part = part.strip().lower()
+        if re.fullmatch(r"\d+-\d+", part):
+            a, b = map(int, part.split("-"))
+            nums.update(range(min(a, b), max(a, b) + 1))
+        elif part.isdigit():
+            nums.add(int(part))
+        elif part:
+            names.add(Path(part).stem)
+
+    def selected(path: Path) -> bool:
+        stem = path.stem.lower()
+        m = re.search(r"(\d+)$", stem)
+        return stem in names or (m is not None and int(m.group(1)) in nums)
+    return selected
+
+
+def previous_wrong() -> set[str]:
+    """Photo names that were wrong in the last eval_results.csv."""
+    p = Path("eval_results.csv")
+    if not p.exists():
+        return set()
+    with open(p, newline="") as f:
+        return {r["name"] for r in csv.DictReader(f) if r.get("pred") not in r.get("truth", "").split("|")}
 
 
 def outcome(r) -> str:
@@ -430,9 +510,10 @@ def col(header: list[str], name: str) -> int:
     raise SystemExit(f"Column '{name}' not found. Your columns are: {', '.join(header)}")
 
 
-def run_list(list_path: Path, photo_dir: Path, bins_mode: str, sleep: float, fresh: bool):
+def run_list(list_path: Path, photo_dir: Path, bins_mode: str, sleep: float, fresh: bool, plan=None):
     header, table = read_table(list_path)
     ci_photo, ci_bin = col(header, "Photo"), col(header, "Bin_Classification")
+    ci_desc = next((i for i, h in enumerate(header) if _norm(h) in ("description", "descriptor", "userdescription")), None)
     for extra in ["Gemini_Classification", "Eval_Correct", "Decided_By", "Confidence"]:
         if not any(_norm(h) == _norm(extra) for h in header):
             header.append(extra)
@@ -441,7 +522,7 @@ def run_list(list_path: Path, photo_dir: Path, bins_mode: str, sleep: float, fre
     ci_gem, ci_ok = col(header, "Gemini_Classification"), col(header, "Eval_Correct")
     ci_by, ci_conf = col(header, "Decided_By"), col(header, "Confidence")
 
-    photos, problems, row_of, uncertain_of, interp = [], [], {}, {}, []
+    photos, problems, row_of, uncertain_of, interp, descs = [], [], {}, {}, [], {}
     excluded, single_ids = 0, set()
     for idx, r in enumerate(table):
         if not str(r[ci_photo]).strip():
@@ -465,6 +546,8 @@ def run_list(list_path: Path, photo_dir: Path, bins_mode: str, sleep: float, fre
             truth = "|".join(ids)
             photos.append((path, truth))
             row_of[str(path)] = idx
+            if ci_desc is not None and str(r[ci_desc]).strip():
+                descs[str(path)] = str(r[ci_desc]).strip()
             uncertain_of[str(path)] = unsure
             if len(ids) == 1 and ids[0] != NOT_WASTE:
                 single_ids.add(ids[0])
@@ -484,7 +567,9 @@ def run_list(list_path: Path, photo_dir: Path, bins_mode: str, sleep: float, fre
             else [CATEGORY_BY_ID[i] for i in sorted(single_ids)] if bins_mode == "folders"
             else [c for c in CATEGORIES if c.get("default") or c["id"] in single_ids])
     print(f"Testing {len(photos)} photos against {len(bins)} bins…\n")
-    rows = run(photos, bins, sleep, fresh)
+    if descs:
+        print(f"Using your descriptions for {len(descs)} photos.\n")
+    rows = run(photos, bins, sleep, fresh, plan, descs)
 
     for r in rows:
         r["uncertain"] = uncertain_of.get(r["file"], False)
@@ -546,8 +631,19 @@ def main():
     ap.add_argument("--photos", type=Path, help="where the photos in --list are (default: data/photos)")
     ap.add_argument("--bins", choices=["default", "all", "folders"], default="default")
     ap.add_argument("--sleep", type=float, default=1.0)
-    ap.add_argument("--fresh", action="store_true")
+    ap.add_argument("--fresh", action="store_true", help="ignore all saved results and re-test everything (uses the most credits)")
+    ap.add_argument("--only", help="only call Gemini for these photos, e.g. 1-11,15 (others reuse saved results)")
+    ap.add_argument("--redo-wrong", action="store_true", help="only re-test photos that were wrong last time")
     a = ap.parse_args()
+
+    plan = None
+    if a.redo_wrong:
+        wrong = previous_wrong()
+        print(f"Re-testing {len(wrong)} photos that were wrong last time; reusing saved results for the rest.\n")
+        plan = lambda path: "force" if path.name in wrong else "reuse"
+    elif a.only:
+        sel = parse_only(a.only)
+        plan = lambda path: "run" if sel(path) else "reuse"
 
     filled, excluded = None, 0
     if a.list:
@@ -557,7 +653,7 @@ def main():
         photo_dir = a.photos or (default_dir if default_dir.is_dir() else a.list.parent)
         if not photo_dir.is_dir():
             sys.exit(f"Photo folder not found: {photo_dir}")
-        rows, filled, excluded = run_list(a.list, photo_dir, a.bins, a.sleep, a.fresh)
+        rows, filled, excluded = run_list(a.list, photo_dir, a.bins, a.sleep, a.fresh, plan)
     else:
         if not a.folder or not a.folder.is_dir():
             sys.exit("Give a photo folder (python eval.py eval_photos) or a list (python eval.py --list photos.xlsx --photos photos/)")
@@ -567,12 +663,12 @@ def main():
         folder_ids = {t for _, t in photos}
         bins = [c for c in CATEGORIES if c.get("default") or c["id"] in folder_ids] if a.bins == "default" else CATEGORIES if a.bins == "all" else [CATEGORY_BY_ID[i] for i in sorted(folder_ids)]
         print(f"Testing {len(photos)} photos against {len(bins)} bins…\n")
-        rows = run(photos, bins, a.sleep, a.fresh)
+        rows = run(photos, bins, a.sleep, a.fresh, plan)
     if not rows:
         sys.exit("Every photo failed. Check your GEMINI_API_KEY and internet connection.")
 
     with open("eval_results.csv", "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=["name", "truth", "pred", "decided_by", "matched_item", "matched_name", "confidence", "low_confidence",
+        w = csv.DictWriter(f, fieldnames=["name", "user_description", "truth", "pred", "decided_by", "matched_item", "matched_name", "confidence", "low_confidence",
                                           "alternative", "missing_bin", "description", "reasoning", "file"])
         w.writeheader()
         w.writerows({k: r.get(k, "") for k in w.fieldnames} for r in rows)

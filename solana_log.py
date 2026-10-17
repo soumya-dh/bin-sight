@@ -41,7 +41,11 @@ def rpc(method: str, params: list):
 
 
 def load_or_create_keypair() -> Keypair:
-    """The backend's own devnet wallet. The file is a private key: never commit it."""
+    """The backend's own devnet wallet. The file is a private key: never commit it.
+    On a host (Render etc.) set SOLANA_KEYPAIR_JSON to the file's contents instead."""
+    env_json = os.getenv("SOLANA_KEYPAIR_JSON", "").strip()
+    if env_json:
+        return Keypair.from_bytes(bytes(json.loads(env_json)))
     if KEYPAIR_PATH.exists():
         return Keypair.from_bytes(bytes(json.loads(KEYPAIR_PATH.read_text())))
     kp = Keypair()

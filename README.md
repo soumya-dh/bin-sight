@@ -9,7 +9,7 @@ New students in university labs often don't know which waste stream an item belo
 
 ## How it works
 1. **Choose your bins.** Every lab is different, so you tick the bins your lab actually has (hydrocarbon, chlorinated, halogenated, aqueous, silver nitrate, heavy metal, silica, autoclave, sharps, recycling…) and can add your own specialist bins. The choice is remembered on that device.
-2. **Take a photo** in the browser (works on phones).
+2. **Take a photo** in the browser (works on phones) and/or **describe it** in a few words ("lead nitrate solution"). A description tells Gemini what a photo can't show, like what's inside a bottle; description-only works too.
 3. **Where to throw it.** **Gemini** (`gemini-3.8-flash`) looks at the image and picks one of *your* bins, returning structured JSON: bin, confidence, hazards, PPE and reasoning. It always gives a decisive answer, so students don't have to queue up to ask the technician. If the photo is unclear it still answers, flags it, and suggests a second-choice bin to check against the label. If the waste needs a bin your lab hasn't selected, it never substitutes a "close enough" bin; it names the bin needed, and one tap adds it. When the user confirms, the backend writes a compact record (bin, category, timestamp, image hash) to **Solana devnet** with the Memo program, giving a tamper-proof disposal log.
 4. **How to clean it (optional).** If the photo shows reusable equipment such as a flask or spatula, Bin-Sight gives step-by-step cleaning instructions, including which of your bins the rinse goes into.
 

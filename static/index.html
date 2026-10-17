@@ -119,6 +119,13 @@
              vertical-align: -3px; margin-right: 6px; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* Description box */
+  .describe { display: block; margin: 4px 0 10px; }
+  .describe-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+  .describe textarea { width: 100%; font: inherit; padding: 12px; border-radius: 12px; resize: vertical;
+                       border: 1px solid var(--border); background: var(--card); color: var(--text); }
+  .describe textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
   /* Policy match */
   .source { border-radius: 12px; padding: 12px 14px; margin-bottom: 6px; font-size: 14px; }
   .source.policy { background: #e7f6ec; color: #14532d; border: 1px solid #b7e1c4; }
@@ -171,12 +178,17 @@
 
   <!-- STEP 2: photo -->
   <section class="step" id="step2">
-    <h2>Take a photo of the waste</h2>
-    <p class="sub">Get labels and hazard symbols in shot if you can.</p>
+    <h2>Show us the waste</h2>
+    <p class="sub">Take a photo (get labels and hazard symbols in shot), add a description, or both.</p>
     <label class="card upload">
       <input type="file" id="fileInput" accept="image/*" capture="environment">
       <img id="preview" alt="Selected waste photo">
       <span id="uploadText"><strong>📷 Tap to take a photo</strong><br><span class="muted">or choose an image</span></span>
+    </label>
+    <label class="describe">
+      <span class="describe-label">Describe it <span class="muted">(optional, but it helps)</span></span>
+      <textarea id="descInput" rows="2" maxlength="300"
+        placeholder="e.g. lead nitrate solution · silica from my column · gloves used with EtBr"></textarea>
     </label>
     <p class="chosen-bins" id="chosenBins"></p>
     <p id="status" class="muted"></p>
@@ -333,7 +345,8 @@ $("customName").addEventListener("keydown", (e) => { if (e.key === "Enter") addC
 
 const binCount = () => selected.size + customs.length;
 
-/* ---------- Step 2: photo ---------- */
+/* ---------- Step 2: photo and/or description ---------- */
+$("descInput").addEventListener("input", () => updateNav());
 $("fileInput").addEventListener("change", (e) => {
   file = e.target.files[0];
   if (!file) return;
@@ -348,7 +361,8 @@ async function classify() {
   busy = true; updateNav();
   $("status").innerHTML = '<span class="spinner"></span>Analysing with Gemini…';
   const form = new FormData();
-  form.append("image", file);
+  if (file) form.append("image", file);
+  form.append("description", $("descInput").value.trim());
   form.append("bins", JSON.stringify([...selected, ...customs]));
   try {
     const res = await fetch("/api/classify", { method: "POST", body: form });
@@ -517,6 +531,7 @@ function go(n) {
 function resetForNewItem() {
   file = null; result = null;
   $("fileInput").value = "";
+  $("descInput").value = "";
   $("preview").style.display = "none";
   $("uploadText").innerHTML = '<strong>📷 Tap to take a photo</strong><br><span class="muted">or choose an image</span>';
   go(2);
@@ -530,7 +545,7 @@ function updateNav() {
     next.disabled = !binCount();
   } else if (step === 2) {
     next.textContent = busy ? "Analysing…" : "Identify waste";
-    next.disabled = !file || busy;
+    next.disabled = (!file && !$("descInput").value.trim()) || busy;
   } else if (step === 3) {
     next.textContent = hasCleaning() ? "Next: how to clean it" : "Scan another item";
     next.disabled = false;

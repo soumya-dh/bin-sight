@@ -1,0 +1,79 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>Bin-Sight Accuracy</title>
+<style>
+:root { --surface:#fcfcfb; --card:#ffffff; --text-primary:#0b0b0b; --text-secondary:#52514e;
+        --border:#e6e5e1; --empty:#f3f2ef; }
+@media (prefers-color-scheme: dark) { :root { --surface:#1a1a19; --card:#222220; --text-primary:#f0efec;
+        --text-secondary:#c3c2b7; --border:#383835; --empty:#2a2a28; } }
+* { box-sizing:border-box }
+body { margin:0; background:var(--surface); color:var(--text-primary); font-family:system-ui,-apple-system,sans-serif; }
+main { max-width:1000px; margin:0 auto; padding:28px 16px 60px; }
+h1 { margin:0 0 4px; font-size:26px } h2 { font-size:18px; margin:32px 0 10px }
+.muted { color:var(--text-secondary) }
+.tiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:12px; margin:20px 0 }
+.tile { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px }
+.tile .v { font-size:34px; font-weight:700; letter-spacing:-.02em }
+.tile .k { color:var(--text-secondary); font-size:14px; margin-top:2px }
+.scroll { overflow-x:auto; background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px }
+table.cm { border-collapse:separate; border-spacing:2px; font-variant-numeric:tabular-nums }
+.cm th { font-weight:600; font-size:12px; color:var(--text-secondary) }
+.cm .col { height:74px; vertical-align:bottom; padding:0 }
+.cm .col span { display:inline-block; writing-mode:vertical-rl; transform:rotate(180deg); padding:4px 0; }
+.cm .rowh { text-align:right; padding-right:10px; white-space:nowrap; max-width:220px; overflow:hidden; text-overflow:ellipsis }
+.cm .cell { width:44px; height:44px; min-width:44px; text-align:center; font-weight:700; border-radius:4px; cursor:default; outline-offset:2px }
+.cm .empty { background:var(--empty) }
+.cm .recall { padding-left:12px; font-size:13px; color:var(--text-secondary) }
+.axis { font-size:12px; color:var(--text-secondary); margin:6px 0 }
+.legend { display:flex; gap:18px; flex-wrap:wrap; font-size:13px; color:var(--text-secondary); margin-top:12px }
+.legend i { display:inline-block; width:14px; height:14px; border-radius:3px; vertical-align:-2px; margin-right:6px }
+table.list { width:100%; border-collapse:collapse; font-size:14px; background:var(--card); border-radius:14px; overflow:hidden }
+.list th, .list td { text-align:left; padding:10px; border-bottom:1px solid var(--border); vertical-align:top }
+.list th { font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-secondary) }
+#tip { position:fixed; pointer-events:none; background:var(--card); color:var(--text-primary); border:1px solid var(--border);
+        border-radius:10px; padding:8px 10px; font-size:13px; box-shadow:0 6px 20px rgba(0,0,0,.15); display:none; max-width:280px; z-index:9 }
+</style></head><body><main>
+<h1>Bin-Sight accuracy test</h1>
+<p class="muted">10 labelled photos · Gemini model from classify.py · bins offered: the default lab bins</p>
+
+<div class="tiles">
+  <div class="tile"><div class="v">60%</div><div class="k">Correct bin (6 of 10)</div></div>
+  <div class="tile"><div class="v">3</div><div class="k">Wrong bin <i>and</i> confident (the risky case)</div></div>
+  <div class="tile"><div class="v">0</div><div class="k">Wrong, but told to check the label</div></div>
+  <div class="tile"><div class="v">1</div><div class="k">Said no bin fits</div></div>
+</div>
+<div class="tiles">
+  <div class="tile"><div class="v">60%</div><div class="k">Accuracy on labels you were sure of (10 photos)</div></div>
+  <div class="tile"><div class="v">0%</div><div class="k">Accuracy on uncertain labels (0 photos, marked ? or several answers)</div></div>
+  <div class="tile"><div class="v">1</div><div class="k">Photos left out (no label, or "idk")</div></div>
+</div>
+<div class="tiles">
+  <div class="tile"><div class="v">7</div><div class="k">Photos matched to your waste policy (70%)</div></div>
+  <div class="tile"><div class="v">71%</div><div class="k">Accuracy when the policy decided</div></div>
+  <div class="tile"><div class="v">33%</div><div class="k">Accuracy when Gemini decided alone (3 photos)</div></div>
+</div>
+
+<h2>Confusion matrix</h2>
+<div class="scroll">
+  <div class="axis">Rows: the correct bin · Columns: what Bin-Sight chose · Right-hand %: share of that row's photos it got right · Rows with "/" accept either answer (both count as correct)</div>
+  <table class="cm"><thead><tr><th></th><th class="col" title="Sink (drain with flush)"><span>SINK</span></th><th class="col" title="Heavy metal waste"><span>Pb/Hg</span></th><th class="col" title="Autoclave (biological) waste"><span>BIO</span></th><th class="col" title="Clean glass"><span>GLASS</span></th><th class="col" title="Chemically contaminated solids"><span>SOLID</span></th><th class="col" title="Recycling"><span>♻</span></th><th class="col" title="General waste"><span>GEN</span></th><th class="col" title="Not waste"><span>Not waste</span></th><th class="col" title="Silica waste"><span>SiO₂</span></th><th class="col" title="No suitable bin"><span>None fit</span></th><th></th></tr></thead><tbody><tr><th class="rowh" title="Sink (drain with flush)">Sink (drain with flush)</th><td class="cell" style="background:#104281;color:#ffffff" data-tip="&lt;b&gt;1 of 1&lt;/b&gt; Sink (drain with flush) photos → Sink (drain with flush)&lt;br&gt;photo_8.jpeg" tabindex="0" aria-label="1 Sink (drain with flush) predicted as Sink (drain with flush)">1</td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="recall">100%</td></tr><tr><th class="rowh" title="Heavy metal waste">Heavy metal waste</th><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell" style="background:#7f300f;color:#ffffff" data-tip="&lt;b&gt;1 of 1&lt;/b&gt; Heavy metal waste photos → Silica waste&lt;br&gt;photo_31.jpeg" tabindex="0" aria-label="1 Heavy metal waste predicted as Silica waste">1</td><td class="cell empty" aria-label="0"></td><td class="recall">0%</td></tr><tr><th class="rowh" title="Autoclave (biological) waste">Autoclave (biological) waste</th><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell" style="background:#104281;color:#ffffff" data-tip="&lt;b&gt;3 of 3&lt;/b&gt; Autoclave (biological) waste photos → Autoclave (biological) waste&lt;br&gt;photo_1.jpeg&lt;br&gt;photo_4.jpeg&lt;br&gt;photo_6.jpeg" tabindex="0" aria-label="3 Autoclave (biological) waste predicted as Autoclave (biological) waste">3</td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="recall">100%</td></tr><tr><th class="rowh" title="Clean glass">Clean glass</th><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell" style="background:#7f300f;color:#ffffff" data-tip="&lt;b&gt;1 of 1&lt;/b&gt; Clean glass photos → Recycling&lt;br&gt;photo_13.jpeg" tabindex="0" aria-label="1 Clean glass predicted as Recycling">1</td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="recall">0%</td></tr><tr><th class="rowh" title="Chemically contaminated solids">Chemically contaminated solids</th><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell" style="background:#7f300f;color:#ffffff" data-tip="&lt;b&gt;1 of 1&lt;/b&gt; Chemically contaminated solids photos → Silica waste&lt;br&gt;photo_17.jpeg" tabindex="0" aria-label="1 Chemically contaminated solids predicted as Silica waste">1</td><td class="cell empty" aria-label="0"></td><td class="recall">0%</td></tr><tr><th class="rowh" title="Recycling">Recycling</th><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell" style="background:#104281;color:#ffffff" data-tip="&lt;b&gt;1 of 1&lt;/b&gt; Recycling photos → Recycling&lt;br&gt;photo_16.jpeg" tabindex="0" aria-label="1 Recycling predicted as Recycling">1</td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="recall">100%</td></tr><tr><th class="rowh" title="General waste">General waste</th><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell" style="background:#7f300f;color:#ffffff" data-tip="&lt;b&gt;1 of 1&lt;/b&gt; General waste photos → No suitable bin&lt;br&gt;photo_14.jpeg" tabindex="0" aria-label="1 General waste predicted as No suitable bin">1</td><td class="recall">0%</td></tr><tr><th class="rowh" title="Not waste">Not waste</th><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="cell" style="background:#104281;color:#ffffff" data-tip="&lt;b&gt;1 of 1&lt;/b&gt; Not waste photos → Not waste&lt;br&gt;photo_41.jpeg" tabindex="0" aria-label="1 Not waste predicted as Not waste">1</td><td class="cell empty" aria-label="0"></td><td class="cell empty" aria-label="0"></td><td class="recall">100%</td></tr></tbody></table>
+  <div class="legend"><span><i style="background:#256abf"></i>Correct (diagonal), darker = more of the row</span>
+  <span><i style="background:#eb6834"></i>Mistake, darker = more of the row</span>
+  <span><i style="background:var(--empty)"></i>None</span></div>
+</div>
+
+<h2>Every mistake</h2>
+<table class="list"><thead><tr><th>Type</th><th>Photo</th><th>Correct bin</th><th>Bin-Sight chose</th><th>Conf.</th><th>Decided by</th><th>Its reasoning</th></tr></thead>
+<tbody><tr><td>⚠️ Wrong bin, confident</td><td>photo_13.jpeg</td><td>Clean glass</td><td>Recycling</td><td>95%</td><td>Policy I004: Cardboard and paper packaging (kit boxes, sleeves)</td><td class='muted'>The item is clean, uncontaminated cardboard packaging from a reagent kit. It should be flattened and placed into the clean cardboard recycling stream.</td></tr><tr><td>⚠️ Wrong bin, confident</td><td>photo_17.jpeg</td><td>Chemically contaminated solids</td><td>Silica waste</td><td>95%</td><td>Gemini alone</td><td class='muted'>These are developed thin-layer chromatography (TLC) plates containing silica stationary phase and organic chemical spots. The lab provides a dedicated silica waste stream specifically for used silica gel and TLC plates.</td></tr><tr><td>⚠️ Wrong bin, confident</td><td>photo_31.jpeg</td><td>Heavy metal waste</td><td>Silica waste</td><td>85%</td><td>Gemini alone</td><td class='muted'>The foreground contains used silica TLC plates used to monitor the chromatography fractions; these belong in the designated silica waste container. The glass test tubes are reusable equipment that should be emptied and cleaned.</td></tr><tr><td>Said no bin fits</td><td>photo_14.jpeg</td><td>General waste</td><td>No suitable bin</td><td>95%</td><td>Policy I077: Surplus or unwanted reagents in original containers</td><td class='muted'>These are original manufacturer reagent bottles containing sodium phosphate salts (monobasic and dibasic). Surplus or unwanted solid chemicals in original packaging cannot go into routine lab bins and must be handled via chemical waste/surplus collection.</td></tr></tbody></table>
+</main><div id="tip" role="tooltip"></div>
+<script>
+const tip = document.getElementById("tip");
+function show(el, x, y) { tip.innerHTML = el.dataset.tip; tip.style.display = "block";
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  tip.style.left = Math.min(x + 14, innerWidth - w - 8) + "px"; tip.style.top = Math.min(y + 14, innerHeight - h - 8) + "px"; }
+document.querySelectorAll("[data-tip]").forEach(el => {
+  el.addEventListener("mousemove", e => show(el, e.clientX, e.clientY));
+  el.addEventListener("mouseleave", () => tip.style.display = "none");
+  el.addEventListener("focus", () => { const r = el.getBoundingClientRect(); show(el, r.right, r.top); });
+  el.addEventListener("blur", () => tip.style.display = "none");
+});
+</script></body></html>

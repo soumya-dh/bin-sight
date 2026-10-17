@@ -6,3 +6,4 @@ solders
 httpx
 python-dotenv
 openpyxl
+pillow
